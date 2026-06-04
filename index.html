@@ -126,6 +126,8 @@
   .seg{display:flex;background:#eef2f7;border-radius:10px;padding:3px;margin-bottom:14px}
   .seg button{flex:1;border:0;background:transparent;padding:9px;border-radius:8px;font-weight:700;font-size:12.5px;color:var(--muted);cursor:pointer}
   .seg button.active{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
+  .scrollseg{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .scrollseg button{flex:0 0 auto;white-space:nowrap;padding:9px 12px}
   .req{color:var(--red)}
   .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
     padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:60;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:90%}
@@ -182,7 +184,15 @@
     <div class="tile" onclick="go('risks')"><div class="ic i-red">⚠️</div><b>Site Risks</b><span>Today’s hazards &amp; controls</span></div>
     <div class="tile" onclick="go('report')"><div class="ic i-amber">📣</div><b>Report a Hazard</b><span>Goes straight to supervisor</span></div>
     <div class="tile" onclick="go('nominate')"><div class="ic i-blue">🏅</div><b>Nominate a Mate</b><span>Recognise good safety</span></div>
+    <div class="tile" onclick="go('induction')"><div class="ic" style="background:rgba(124,77,255,.12);color:#7c4dff">🎓</div><b>Site Induction</b><span id="indTileSub">Sit or renew induction</span></div>
+    <div class="tile" onclick="go('equipment')"><div class="ic i-amber">🔌</div><b>Equipment Register</b><span>Test &amp; tag / electrical WoF</span></div>
     <div class="tile" onclick="go('signoff')"><div class="ic i-navy" style="background:rgba(15,34,56,.1);color:var(--navy)">📋</div><b>Sign On / Off</b><span>Start &amp; end your shift</span></div>
+  </div>
+
+  <div class="card" id="ppeHomeCard" style="margin-top:14px">
+    <h3>🦺 Minimum site PPE — mandatory</h3>
+    <p class="meta">Required for all personnel on site at all times.</p>
+    <div class="chips" id="ppeHomeList" style="margin-top:8px"></div>
   </div>
 </section>
 
@@ -254,6 +264,11 @@
     <div class="scroller">
       <table class="rtable" id="riskTable"></table>
     </div>
+  </div>
+  <div class="card">
+    <h3>🦺 Minimum PPE for this site</h3>
+    <p class="meta">Mandatory for everyone on site, in addition to any task-specific PPE in the controls above.</p>
+    <div class="chips" id="ppeRiskList" style="margin-top:8px"></div>
   </div>
   <p class="sub" style="font-size:11.5px">Controls follow the hierarchy: <b>Eliminate → Isolate → Engineer → Administer → PPE</b>.</p>
 </section>
@@ -353,13 +368,53 @@
   </div>
 </section>
 
+<!-- ============== WORKER: SITE INDUCTION ============== -->
+<section class="view" id="v-induction">
+  <h1>Site Induction</h1>
+  <p class="sub">Complete before working on site. Renew when expired.</p>
+  <div id="indStatus"></div>
+
+  <div id="indStartCard">
+    <div class="card"><h3>What the induction covers</h3>
+      <div id="indCovers"></div>
+    </div>
+    <button class="btn btn-primary" onclick="startInduction()">Start / Renew Induction</button>
+  </div>
+
+  <div id="indFlow" class="hide">
+    <div class="card">
+      <div class="progress"><i id="indBar"></i></div>
+      <div id="indStep"></div>
+    </div>
+    <div class="btnrow">
+      <button class="btn-ghost btn" onclick="indPrev()">Back</button>
+      <button class="btn btn-green" id="indNextBtn" onclick="indNext()">Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============== WORKER: EQUIPMENT REGISTER ============== -->
+<section class="view" id="v-equipment">
+  <h1>Equipment Register</h1>
+  <p class="sub">Electrical Warrant of Fitness — test &amp; tag status. Only use equipment showing a current pass.</p>
+  <div class="stat">
+    <div class="s"><b id="eqPass">0</b><span>Current</span></div>
+    <div class="s"><b id="eqSoon">0</b><span>Due soon</span></div>
+    <div class="s"><b id="eqFail">0</b><span>Do not use</span></div>
+  </div>
+  <div class="banner b-alert"><span class="bi">⚠️</span><div>Any item tagged <b>Overdue</b> or <b>Out of service</b> must not be used — report it via “Report a Hazard”.</div></div>
+  <div class="card"><div class="scroller"><table class="rtable" id="eqTable"></table></div></div>
+</section>
+
 <!-- ============== MANAGEMENT CONSOLE ============== -->
 <section class="view" id="v-mgmt">
   <h1>Management Console</h1>
   <p class="sub">Publish risks, manage controls and monitor crew safety.</p>
 
-  <div class="seg" id="mgmtTabs">
-    <button class="active" data-tab="m-risks" onclick="mgmtTab(this)">Site Risks</button>
+  <div class="seg scrollseg" id="mgmtTabs">
+    <button class="active" data-tab="m-risks" onclick="mgmtTab(this)">Risks &amp; PPE</button>
+    <button data-tab="m-equip" onclick="mgmtTab(this)">Equipment</button>
+    <button data-tab="m-ind" onclick="mgmtTab(this)">Inductions</button>
     <button data-tab="m-reports" onclick="mgmtTab(this)">Reports</button>
     <button data-tab="m-well" onclick="mgmtTab(this)">Wellness</button>
     <button data-tab="m-noms" onclick="mgmtTab(this)">Kudos</button>
@@ -372,6 +427,13 @@
       <p class="meta">This banner shows on every worker’s home screen.</p>
       <textarea id="mgAlert" placeholder="e.g. Crane lift on east face 10am–2pm. Exclusion zone in force."></textarea>
       <div class="btnrow"><button class="btn btn-primary sm" onclick="publishAlert()">Publish alert</button></div>
+    </div>
+
+    <div class="card">
+      <h3>Minimum site PPE</h3>
+      <p class="meta">Shown to every worker on Home and the Site Risks page. Tap ✕ to remove.</p>
+      <div class="chips" id="mgPpeList" style="margin:8px 0"></div>
+      <div class="btnrow"><input id="mgPpeInput" placeholder="Add PPE — e.g. Cut-resistant gloves"><button class="btn btn-navy sm" onclick="addPpe()">Add</button></div>
     </div>
 
     <div class="card">
@@ -395,6 +457,35 @@
         <textarea id="hzCtrl" placeholder="e.g. Exclusion zone barricaded; spotter posted; no entry under load; hi-vis & hard hat."></textarea>
         <button class="btn btn-navy" style="margin-top:12px" onclick="addHazard()">Save Hazard to Register</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Equipment register editor -->
+  <div id="m-equip" class="mtab hide">
+    <div class="card"><h3>Test &amp; Tag / Electrical WoF Register</h3>
+      <p class="meta">Status auto-calculates from the re-test interval and last test date.</p>
+      <div class="scroller" style="margin-top:10px"><table class="rtable" id="mgEqTable"></table></div>
+    </div>
+    <div class="card accordion" id="addEqCard">
+      <h3 onclick="document.getElementById('addEqCard').classList.toggle('open')">➕ Add equipment <span>▾</span></h3>
+      <div class="ac-body">
+        <label>Item <span class="req">*</span></label><input id="eqItem" placeholder="e.g. 110V extension lead">
+        <label>Tag / asset #</label><input id="eqTag" placeholder="e.g. TT-0421">
+        <label>Last tested</label><input type="date" id="eqDate">
+        <label>Re-test interval</label>
+        <select id="eqInt"><option value="3">3 months</option><option value="6">6 months</option><option value="12" selected>12 months</option></select>
+        <label>Status</label>
+        <select id="eqStat"><option value="ok" selected>Pass — in service</option><option value="oos">Out of service</option></select>
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addEquipment()">Save to Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inductions roster -->
+  <div id="m-ind" class="mtab hide">
+    <div class="card"><h3>Induction roster</h3>
+      <p class="meta">Personnel inducted on site and their expiry.</p>
+      <div id="indRoster"></div>
     </div>
   </div>
 
@@ -466,10 +557,23 @@ const seed={
   nominations:[
     {who:"Dan R.",what:"Stopped a reversing truck that hadn’t seen a worker — quick eyes, no incident.",cat:"Safe behaviour",by:"S. Patel",t:Date.now()-86400e3},
     {who:"Priya K.",what:"Built a tidy lead-stand setup that cleared all trip hazards from the walkway.",cat:"Good initiative",by:"J. Wells",t:Date.now()-172800e3}
+  ],
+  ppe:["Hard hat","Safety boots","Hi-vis vest","Safety glasses","Gloves","Hearing protection (as required)"],
+  equipment:[
+    {item:"110V extension lead (25m)",tag:"TT-0421",tested:Date.now()-150*864e5,interval:3,status:"ok"},
+    {item:"Makita 18V drill",tag:"TT-0388",tested:Date.now()-40*864e5,interval:12,status:"ok"},
+    {item:"Angle grinder 125mm",tag:"TT-0307",tested:Date.now()-360*864e5,interval:12,status:"ok"},
+    {item:"Site distribution board",tag:"TT-0190",tested:Date.now()-80*864e5,interval:6,status:"ok"},
+    {item:"Portable generator 5kVA",tag:"TT-0255",tested:Date.now()-200*864e5,interval:6,status:"oos"}
+  ],
+  inductions:[
+    {name:"M. Tran",company:"Apex Electrical",t:Date.now()-200*864e5,valid:365},
+    {name:"S. Patel",company:"BuildCo",t:Date.now()-30*864e5,valid:365}
   ]
 };
 let state=load();
-function load(){try{const s=JSON.parse(localStorage.getItem(LS));return s&&s.hazards?s:structuredClone(seed)}catch(e){return structuredClone(seed)}}
+function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(!s||!s.hazards)return structuredClone(seed);
+  ['ppe','equipment','inductions'].forEach(k=>{if(!s[k])s[k]=structuredClone(seed[k]);});return s;}catch(e){return structuredClone(seed)}}
 function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
 
 /* session (not persisted long-term) */
@@ -487,12 +591,14 @@ function setRole(r){
 }
 function go(v){
   document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
-  const map={home:'v-home',prestart:'v-prestart',risks:'v-risks',wellness:'v-wellness',report:'v-report',nominate:'v-nominate',signoff:'v-signoff',mgmt:'v-mgmt'};
+  const map={home:'v-home',prestart:'v-prestart',risks:'v-risks',wellness:'v-wellness',report:'v-report',nominate:'v-nominate',signoff:'v-signoff',induction:'v-induction',equipment:'v-equipment',mgmt:'v-mgmt'};
   document.getElementById(map[v]).classList.add('active');
   document.querySelectorAll('#workerNav button').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
   if(v==='risks')renderRisks();
   if(v==='mgmt')renderMgmt();
   if(v==='signoff')setTimeout(initSig,0);
+  if(v==='equipment')renderEquipment();
+  if(v==='induction')renderInduction();
   window.scrollTo(0,0);
 }
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
@@ -504,6 +610,9 @@ function renderHome(){
   document.getElementById('stCheck').textContent=session.prestartDone?'✓':'—';
   document.getElementById('stWell').textContent=session.wellnessDone?'✓':'—';
   document.getElementById('stSign').textContent=session.signedOn?'On':'—';
+  const iv=session.inductedUntil&&session.inductedUntil>Date.now();
+  const its=document.getElementById('indTileSub');if(its)its.textContent=iv?'Current ✓ — tap to view':'Sit or renew induction';
+  renderPPE();
 }
 
 /* ===================== PRE-START ===================== */
@@ -754,6 +863,7 @@ function renderMgmt(){
   // noms
   const mn=document.getElementById('mgNomFeed');
   mn.innerHTML=state.nominations.map(n=>liItem(n.who,`“${esc(n.what)}”`,n.cat+' · by '+esc(n.by),n.t,'🏅',avatarColor(n.who))).join('')||'<div class="emptymsg">No nominations yet.</div>';
+  renderMgEquip();renderIndRoster();renderPPE();
 }
 function publishAlert(){state.alert=document.getElementById('mgAlert').value.trim();state.alertTime=Date.now();save();renderHome();toast('Alert published to all workers 📢');}
 function addHazard(){
@@ -769,6 +879,112 @@ function addHazard(){
 function delHazard(i){state.hazards.splice(i,1);save();renderMgmt();toast('Hazard removed');}
 function resolveReport(i){state.reports.splice(i,1);save();renderMgmt();toast('Report marked resolved ✅');}
 
+/* ===================== PPE ===================== */
+function renderPPE(){
+  const list=(state.ppe||[]).map(p=>`<span class="chip">🦺 ${esc(p)}</span>`).join('')||'<span class="meta">No PPE set.</span>';
+  ['ppeHomeList','ppeRiskList'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=list;});
+  const mg=document.getElementById('mgPpeList');
+  if(mg)mg.innerHTML=(state.ppe||[]).map((p,i)=>`<span class="chip">${esc(p)} <b style="cursor:pointer;color:var(--red)" onclick="delPpe(${i})">✕</b></span>`).join('')||'<span class="meta">None set.</span>';
+}
+function addPpe(){const v=document.getElementById('mgPpeInput').value.trim();if(!v){toast('Type a PPE item');return;}state.ppe.push(v);save();document.getElementById('mgPpeInput').value='';renderPPE();toast('PPE requirement added ✅');}
+function delPpe(i){state.ppe.splice(i,1);save();renderPPE();}
+
+/* ===================== EQUIPMENT ===================== */
+function eqStatus(e){
+  if(e.status==='oos')return['OUT OF SERVICE','p-crit'];
+  const due=e.tested+e.interval*30*864e5, days=(due-Date.now())/864e5;
+  if(days<0)return['OVERDUE','p-crit'];
+  if(days<=14)return['DUE SOON','p-med'];
+  return['CURRENT','p-low'];
+}
+function fmtDate(t){return new Date(t).toLocaleDateString();}
+function setTxt(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function renderEquipment(){
+  const t=document.getElementById('eqTable');if(!t)return;
+  t.innerHTML='<tr><th>Item</th><th>Tag #</th><th>Tested</th><th>Next due</th><th>Status</th></tr>';
+  let pass=0,soon=0,bad=0;
+  state.equipment.forEach(e=>{
+    const[txt,cls]=eqStatus(e);
+    if(cls==='p-low')pass++;else if(cls==='p-med')soon++;else bad++;
+    const due=e.tested+e.interval*30*864e5;
+    t.innerHTML+=`<tr><td><b>${esc(e.item)}</b></td><td>${esc(e.tag||'—')}</td><td>${fmtDate(e.tested)}</td><td>${fmtDate(due)}</td><td><span class="pill ${cls}">${txt}</span></td></tr>`;
+  });
+  setTxt('eqPass',pass);setTxt('eqSoon',soon);setTxt('eqFail',bad);
+}
+function renderMgEquip(){
+  const t=document.getElementById('mgEqTable');if(!t)return;
+  t.innerHTML='<tr><th>Item</th><th>Tag</th><th>Next due</th><th>Status</th><th></th></tr>';
+  state.equipment.forEach((e,i)=>{
+    const[txt,cls]=eqStatus(e);const due=e.tested+e.interval*30*864e5;
+    t.innerHTML+=`<tr><td><b>${esc(e.item)}</b></td><td>${esc(e.tag||'—')}</td><td>${fmtDate(due)}</td><td><span class="pill ${cls}">${txt}</span></td>
+      <td><button style="border:0;background:transparent;color:var(--red);cursor:pointer;font-weight:800" onclick="delEquipment(${i})">✕</button></td></tr>`;
+  });
+}
+function addEquipment(){
+  const item=document.getElementById('eqItem').value.trim();
+  if(!item){toast('Enter an item name');return;}
+  const d=document.getElementById('eqDate').value;
+  state.equipment.push({item,tag:document.getElementById('eqTag').value.trim(),tested:d?new Date(d).getTime():Date.now(),interval:parseInt(document.getElementById('eqInt').value),status:document.getElementById('eqStat').value});
+  save();renderMgEquip();renderEquipment();
+  ['eqItem','eqTag','eqDate'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addEqCard').classList.remove('open');
+  toast('Equipment saved to register ✅');
+}
+function delEquipment(i){state.equipment.splice(i,1);save();renderMgEquip();renderEquipment();toast('Equipment removed');}
+
+/* ===================== INDUCTION ===================== */
+const indCovers=["Site rules & daily sign-in/out","Emergency procedures & assembly point","Hazard reporting & safe work methods","Required PPE & exclusion zones","First aid & incident reporting"];
+const indSteps=[
+  {type:'ack',title:'Site rules',body:'You will sign in and out daily, follow all signage and supervisor directions, and only enter areas you are authorised and inducted for.'},
+  {type:'ack',title:'Emergency procedures',body:'On the alarm: stop work, make equipment safe if you can, and go to the assembly point. Know your nearest exit and the first-aid location.'},
+  {type:'ack',title:'PPE & exclusion zones',body:'Wear the minimum site PPE at all times. Never enter a barricaded exclusion zone or work under a suspended load.'},
+  {type:'quiz',title:'Quick check',q:'You notice a frayed electrical lead. What do you do?',opts:['Use it carefully','Tag it out and report it','Ignore it'],a:1},
+  {type:'quiz',title:'Quick check',q:'The evacuation alarm sounds. You should:',opts:['Finish your task first','Make safe and go to the assembly point','Leave site and drive home'],a:1}
+];
+let indI=0,indAns={};
+function renderInduction(){
+  const valid=session.inductedUntil&&session.inductedUntil>Date.now();
+  const s=document.getElementById('indStatus');
+  if(valid){s.innerHTML=`<div class="banner b-ok"><span class="bi">✅</span><div><b>Induction current.</b> Valid until ${fmtDate(session.inductedUntil)}.</div></div>`;}
+  else if(session.inductedUntil){s.innerHTML=`<div class="banner b-alert"><span class="bi">⚠️</span><div><b>Induction expired.</b> Please renew before commencing work.</div></div>`;}
+  else{s.innerHTML=`<div class="banner b-info"><span class="bi">ℹ️</span><div>You are not yet inducted for this site.</div></div>`;}
+  document.getElementById('indCovers').innerHTML=indCovers.map(c=>`<div class="check"><div class="txt">✓ ${esc(c)}</div></div>`).join('');
+  document.getElementById('indStartCard').classList.remove('hide');
+  document.getElementById('indFlow').classList.add('hide');
+}
+function startInduction(){indI=0;indAns={};document.getElementById('indStartCard').classList.add('hide');document.getElementById('indFlow').classList.remove('hide');renderIndStep();window.scrollTo(0,0);}
+function renderIndStep(){
+  const st=indSteps[indI];
+  document.getElementById('indBar').style.width=(indI/indSteps.length*100)+'%';
+  let html=`<h3>${st.title} <span class="meta">(${indI+1}/${indSteps.length})</span></h3>`;
+  if(st.type==='ack'){html+=`<p style="font-size:14px">${esc(st.body)}</p>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:600;margin-top:10px"><input type="checkbox" id="indAck" style="width:auto" ${indAns[indI]?'checked':''}> I understand and agree</label>`;}
+  else{html+=`<p style="font-size:14px;font-weight:600;margin-top:8px">${esc(st.q)}</p><div class="chips" style="margin-top:8px">`+
+    st.opts.map((o,j)=>`<span class="chip ${indAns[indI]===j?'sel':''}" onclick="indPick(${j})">${esc(o)}</span>`).join('')+`</div>`;}
+  document.getElementById('indStep').innerHTML=html;
+  document.getElementById('indNextBtn').textContent=indI===indSteps.length-1?'Finish induction':'Next';
+}
+function indPick(j){indAns[indI]=j;renderIndStep();}
+function indPrev(){if(indI>0){indI--;renderIndStep();}else{renderInduction();}}
+function indNext(){
+  const st=indSteps[indI];
+  if(st.type==='ack'){if(!document.getElementById('indAck').checked){toast('Please tick to acknowledge');return;}indAns[indI]=true;}
+  else{if(indAns[indI]===undefined){toast('Select an answer');return;}if(indAns[indI]!==st.a){toast('Not quite — review and choose again');return;}}
+  if(indI<indSteps.length-1){indI++;renderIndStep();window.scrollTo(0,0);}
+  else{
+    session.inductedUntil=Date.now()+365*864e5;
+    state.inductions.unshift({name:session.name||'You',company:session.company||'—',t:Date.now(),valid:365});
+    save();renderInduction();renderHome();toast('🎓 Induction complete — valid 12 months');
+  }
+}
+function renderIndRoster(){
+  const el=document.getElementById('indRoster');if(!el)return;
+  el.innerHTML=state.inductions.map(r=>{
+    const until=r.t+(r.valid||365)*864e5, ok=until>Date.now();
+    return `<div class="li"><div class="av" style="background:${ok?'var(--green)':'var(--red)'}">🎓</div><div class="body"><b>${esc(r.name)}</b><p>${esc(r.company)} · ${ok?'valid until '+fmtDate(until):'EXPIRED — renew required'}</p></div><span class="stamp">${timeAgo(r.t)}</span></div>`;
+  }).join('')||'<div class="emptymsg">No inductions recorded.</div>';
+}
+
 /* ===================== HELPERS ===================== */
 function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function avatarColor(s){const c=['#1f3f63','#ff7a18','#19b562','#7c4dff','#e23b3b','#0aa1b8'];let h=0;for(const ch of(s||'x'))h+=ch.charCodeAt(0);return c[h%c.length];}
@@ -781,7 +997,7 @@ function liItem(title,sub,tag,t,ic,col){
 function timeAgo(t){const s=(Date.now()-t)/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 
 /* ===================== INIT ===================== */
-renderHome();renderChecklist();renderWellQs();renderNomFeed();
+renderHome();renderChecklist();renderWellQs();renderNomFeed();renderPPE();
 window.addEventListener('load',initSig);
 window.addEventListener('resize',()=>{/* keep sig sized */});
 </script>
