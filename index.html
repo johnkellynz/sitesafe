@@ -128,6 +128,20 @@
   .seg button.active{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
   .scrollseg{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .scrollseg button{flex:0 0 auto;white-space:nowrap;padding:9px 12px}
+  /* ---------- Project header ---------- */
+  .projhead{background:linear-gradient(135deg,var(--navy),var(--steel));color:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .projhead .ph-label{font-size:10px;letter-spacing:1.2px;color:#9fb3cc;font-weight:800}
+  .projhead .ph-name{font-size:18px;font-weight:800;margin-top:2px;line-height:1.2}
+  .projhead .ph-site{font-size:12.5px;color:#cdd9e8;margin-top:3px}
+  .projhead .ph-details{font-size:12.5px;color:#dce6f2;margin-top:10px;line-height:1.45}
+  .projhead select{width:auto;max-width:42%;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:12px;padding:8px 10px;border-radius:10px}
+  .projhead select option{color:#1a2433}
+  .ph-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .ph-row{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap}
+  .ph-emerg{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-weight:800;font-size:13px;padding:11px 15px;border-radius:11px;text-decoration:none}
+  .ph-geo{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:600;padding:11px 13px;border-radius:11px;cursor:pointer}
+  .ph-geo.on{background:rgba(25,181,98,.32)}
+  .ph-geo.off{background:rgba(226,59,59,.32)}
   .req{color:var(--red)}
   .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
     padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:60;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:90%}
@@ -164,6 +178,22 @@
 
 <!-- ============== WORKER: HOME ============== -->
 <section class="view active" id="v-home">
+  <div class="projhead">
+    <div class="ph-top">
+      <div>
+        <div class="ph-label">CURRENT PROJECT</div>
+        <div class="ph-name" id="phName">—</div>
+        <div class="ph-site" id="phSite"></div>
+      </div>
+      <select id="phSwitch" onchange="switchProject(this.value)" aria-label="Switch project"></select>
+    </div>
+    <div class="ph-details" id="phDetails"></div>
+    <div class="ph-row">
+      <a class="ph-emerg" id="phEmerg" href="tel:111">📞 Emergency <span id="phEmergNum">111</span></a>
+      <div class="ph-geo off" id="phGeo" onclick="geoTap()">📍 Tap to enable location alerts</div>
+    </div>
+  </div>
+  <div id="geoBanner"></div>
   <h1 id="greeting">Good morning 👋</h1>
   <p class="sub" id="homeDate"></p>
 
@@ -306,7 +336,7 @@
 <section class="view" id="v-report">
   <h1>Report Something Unsafe</h1>
   <p class="sub">Sent immediately to the site supervisor.</p>
-  <div class="banner b-alert"><span class="bi">🚨</span><div>If this is an <b>emergency</b> or someone is injured, stop work and call <b>000 / site emergency line</b> first.</div></div>
+  <div class="banner b-alert"><span class="bi">🚨</span><div>If this is an <b>emergency</b> or someone is injured, stop work and call <b>emergency services / your site emergency line</b> first.</div></div>
 
   <div class="card">
     <label>What’s the issue? <span class="req">*</span></label>
@@ -412,6 +442,7 @@
   <p class="sub">Publish risks, manage controls and monitor crew safety.</p>
 
   <div class="seg scrollseg" id="mgmtTabs">
+    <button data-tab="m-proj" onclick="mgmtTab(this)">Projects</button>
     <button class="active" data-tab="m-risks" onclick="mgmtTab(this)">Risks &amp; PPE</button>
     <button data-tab="m-equip" onclick="mgmtTab(this)">Equipment</button>
     <button data-tab="m-ind" onclick="mgmtTab(this)">Inductions</button>
@@ -456,6 +487,30 @@
         <label>Isolation / minimisation controls <span class="req">*</span></label>
         <textarea id="hzCtrl" placeholder="e.g. Exclusion zone barricaded; spotter posted; no entry under load; hi-vis & hard hat."></textarea>
         <button class="btn btn-navy" style="margin-top:12px" onclick="addHazard()">Save Hazard to Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects & sites editor -->
+  <div id="m-proj" class="mtab hide">
+    <div class="card"><h3>Projects &amp; sites</h3>
+      <p class="meta">These details show at the top of every worker’s home screen.</p>
+      <label>Project</label>
+      <select id="mpSel" onchange="mpLoad()"></select>
+      <label>Project name</label><input id="mpName">
+      <label>Site name / address</label><input id="mpSite">
+      <label>Site details (hours, gate, key risks)</label><textarea id="mpDetails"></textarea>
+      <label>Emergency contact number</label><input id="mpEmerg" placeholder="e.g. 111 or site emergency line">
+      <label>Geofence radius (metres)</label><input id="mpRadius" type="number" placeholder="200">
+      <div class="btnrow"><button class="btn btn-navy sm" onclick="mpSave()">Save project</button><button class="btn-ghost btn sm" onclick="setSiteHere(true)">📍 Set site GPS to my location</button></div>
+      <p class="meta" id="mpGeoStat" style="margin-top:8px"></p>
+    </div>
+    <div class="card accordion" id="addProjCard">
+      <h3 onclick="document.getElementById('addProjCard').classList.toggle('open')">➕ Add project <span>▾</span></h3>
+      <div class="ac-body">
+        <label>Project name <span class="req">*</span></label><input id="npName" placeholder="e.g. Eastgate Plaza Stage 2">
+        <label>Site name / address</label><input id="npSite">
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addProject()">Add Project</button>
       </div>
     </div>
   </div>
@@ -569,11 +624,19 @@ const seed={
   inductions:[
     {name:"M. Tran",company:"Apex Electrical",t:Date.now()-200*864e5,valid:365},
     {name:"S. Patel",company:"BuildCo",t:Date.now()-30*864e5,valid:365}
-  ]
+  ],
+  projects:[
+    {name:"Riverside Tower — Level 14 fit-out",site:"12 Riverside Dr, Northbank",details:"High-rise commercial fit-out. Site hours 6:30am–4:30pm. Sign in at Gate B site office. Crane lifts on the east face daily.",emergency:"111",lat:null,lng:null,radius:200},
+    {name:"Harbour Industrial Shed B",site:"8 Dock Rd, Port Estate",details:"Industrial warehouse. Forklift & truck traffic — hi-vis mandatory beyond the office. Hearing protection in the press area.",emergency:"111",lat:null,lng:null,radius:250},
+    {name:"Metro Rail — Platform Works",site:"Central Station, Platform 4",details:"Live rail corridor. Rail safety induction & permit required. Never cross tracks except at marked points.",emergency:"111",lat:null,lng:null,radius:150},
+    {name:"Northgate Warehouse Extension",site:"45 Industry Way, Northgate",details:"Tilt-up construction. Daily crane lifts with exclusion zones. Silica controls in place for concrete cutting.",emergency:"111",lat:null,lng:null,radius:200}
+  ],
+  currentProject:0
 };
 let state=load();
 function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(!s||!s.hazards)return structuredClone(seed);
-  ['ppe','equipment','inductions'].forEach(k=>{if(!s[k])s[k]=structuredClone(seed[k]);});return s;}catch(e){return structuredClone(seed)}}
+  ['ppe','equipment','inductions','projects'].forEach(k=>{if(!s[k])s[k]=structuredClone(seed[k]);});
+  if(s.currentProject==null)s.currentProject=0;return s;}catch(e){return structuredClone(seed)}}
 function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
 
 /* session (not persisted long-term) */
@@ -609,6 +672,7 @@ function renderHome(){
   const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   document.getElementById('greeting').textContent=greet+' 👋';
   document.getElementById('homeDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+  renderProjectHead();checkGeo();
   document.getElementById('riskAlertText').textContent=state.alert||"No active alerts. Review site risks before you start.";
   document.getElementById('stCheck').textContent=session.prestartDone?'✓':'—';
   document.getElementById('stWell').textContent=session.wellnessDone?'✓':'—';
@@ -689,6 +753,7 @@ function signOn(){
   if(!session.prestartDone){toast('Complete your pre-start checklist first');go('prestart');return;}
   if(sigEmpty){toast('Please add your signature');return;}
   session.signedOn=true;session.name=name;session.company=comp;session.job=job;session.signOnTime=Date.now();
+  const pi=state.projects.findIndex(p=>p.name===job);if(pi>=0){state.currentProject=pi;save();}
   document.getElementById('signOnForm').classList.add('hide');
   document.getElementById('signedOnPanel').classList.remove('hide');
   document.getElementById('signedOnMeta').textContent=`${name} · ${comp} · ${job} · ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
@@ -866,7 +931,7 @@ function renderMgmt(){
   // noms
   const mn=document.getElementById('mgNomFeed');
   mn.innerHTML=state.nominations.map(n=>liItem(n.who,`“${esc(n.what)}”`,n.cat+' · by '+esc(n.by),n.t,'🏅',avatarColor(n.who))).join('')||'<div class="emptymsg">No nominations yet.</div>';
-  renderMgEquip();renderIndRoster();renderPPE();
+  renderMgEquip();renderIndRoster();renderPPE();renderMgProjects();
 }
 function publishAlert(){state.alert=document.getElementById('mgAlert').value.trim();state.alertTime=Date.now();save();renderHome();toast('Alert published to all workers 📢');}
 function addHazard(){
@@ -881,6 +946,99 @@ function addHazard(){
 }
 function delHazard(i){state.hazards.splice(i,1);save();renderMgmt();toast('Hazard removed');}
 function resolveReport(i){state.reports.splice(i,1);save();renderMgmt();toast('Report marked resolved ✅');}
+
+/* ===================== PROJECTS & LOCATION ===================== */
+function activeProj(){return state.projects[state.currentProject||0]||state.projects[0];}
+function shortName(n){return (n||'').split('—')[0].trim()||n;}
+function renderProjects(){
+  const so=document.getElementById('soJob');
+  if(so){so.innerHTML=state.projects.map(p=>`<option>${esc(p.name)}</option>`).join('');if(activeProj())so.value=activeProj().name;}
+  const sw=document.getElementById('phSwitch');
+  if(sw)sw.innerHTML=state.projects.map((p,i)=>`<option value="${i}" ${i===(state.currentProject||0)?'selected':''}>${esc(shortName(p.name))}</option>`).join('');
+}
+function renderProjectHead(){
+  const p=activeProj();if(!p)return;
+  setTxt('phName',p.name);setTxt('phSite',p.site?'📍 '+p.site:'');
+  setTxt('phDetails',p.details||'');
+  const num=(p.emergency||'111');
+  const a=document.getElementById('phEmerg');
+  if(a){a.href='tel:'+num.replace(/[^0-9+]/g,'');const ns=document.getElementById('phEmergNum');if(ns)ns.textContent=num;}
+  renderProjects();
+}
+function switchProject(i){state.currentProject=parseInt(i);save();renderProjectHead();checkGeo();toast('Switched to '+shortName(activeProj().name));}
+
+let geoWatch=null,lastPos=null,geoOutside=false;
+function geoTap(){
+  if(geoWatch===null){enableGeo();return;}
+  if(lastPos&&!activeProj().lat){setSiteHere(false);}
+}
+function enableGeo(){
+  if(!navigator.geolocation){toast('Location not supported on this device');return;}
+  if(geoWatch!==null)return;
+  const g=document.getElementById('phGeo');if(g)g.textContent='📍 Requesting location…';
+  geoWatch=navigator.geolocation.watchPosition(onGeo,onGeoErr,{enableHighAccuracy:true,maximumAge:15000,timeout:20000});
+}
+function onGeoErr(){const g=document.getElementById('phGeo');if(g){g.className='ph-geo off';g.textContent='📍 Location blocked — allow it in your browser settings';}}
+function onGeo(pos){lastPos={lat:pos.coords.latitude,lng:pos.coords.longitude};checkGeo();}
+function distM(a,b,c,d){const R=6371000,t=x=>x*Math.PI/180,dLat=t(c-a),dLng=t(d-b);const s=Math.sin(dLat/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
+function checkGeo(){
+  const g=document.getElementById('phGeo'),banner=document.getElementById('geoBanner');
+  if(!g||!lastPos)return;
+  const p=activeProj();
+  if(!p.lat){g.className='ph-geo on';g.textContent='📍 Location on · tap to set this site’s GPS';if(banner)banner.innerHTML='';return;}
+  const d=Math.round(distM(lastPos.lat,lastPos.lng,p.lat,p.lng));
+  const inside=d<=(p.radius||200);
+  g.className='ph-geo '+(inside?'on':'off');
+  g.textContent=inside?`📍 On site · ${d}m from centre`:`📍 Off site · ${d}m away`;
+  let html='';
+  if(!inside&&session.signedOn){html=`<div class="banner b-alert"><span class="bi">🚶</span><div><b>You've left ${esc(shortName(p.name))}.</b> You're still signed on here — sign off, or switch project if you've moved sites.</div></div>`;}
+  let near=null;state.projects.forEach((pr,i)=>{if(i!==(state.currentProject||0)&&pr.lat){if(distM(lastPos.lat,lastPos.lng,pr.lat,pr.lng)<=(pr.radius||200))near={pr,i};}});
+  if(near){html+=`<div class="banner b-info"><span class="bi">📍</span><div>You appear to be at <b>${esc(shortName(near.pr.name))}</b>. <a href="#" onclick="switchProject(${near.i});return false;"><b>Switch project</b></a>${session.signedOn?' and re-sign on here.':'.'}</div></div>`;}
+  else if(inside&&!session.signedOn){html+=`<div class="banner b-info"><span class="bi">✍️</span><div>You're on site but not signed on. <a href="#" onclick="go('prestart');return false;"><b>Run pre-start &amp; sign on</b></a>.</div></div>`;}
+  if(banner)banner.innerHTML=html;
+  if(!inside&&session.signedOn&&!geoOutside)toast('⚠️ You appear to have left site');
+  geoOutside=!inside;
+}
+function setSiteHere(fromMgmt){
+  if(!lastPos){toast('Enable location first — tap the 📍 chip on Home');return;}
+  let idx=state.currentProject||0;
+  if(fromMgmt){const ms=document.getElementById('mpSel');if(ms&&ms.value!=='')idx=parseInt(ms.value);}
+  const p=state.projects[idx];p.lat=lastPos.lat;p.lng=lastPos.lng;save();checkGeo();
+  const st=document.getElementById('mpGeoStat');if(st&&fromMgmt)st.textContent='Site GPS set: '+p.lat.toFixed(5)+', '+p.lng.toFixed(5);
+  toast('Site GPS location saved 📍');
+}
+function mpLoad(){
+  const ms=document.getElementById('mpSel');if(!ms||ms.value==='')return;
+  const p=state.projects[parseInt(ms.value)];if(!p)return;
+  document.getElementById('mpName').value=p.name||'';
+  document.getElementById('mpSite').value=p.site||'';
+  document.getElementById('mpDetails').value=p.details||'';
+  document.getElementById('mpEmerg').value=p.emergency||'111';
+  document.getElementById('mpRadius').value=p.radius||200;
+  document.getElementById('mpGeoStat').textContent=p.lat?('Site GPS set: '+p.lat.toFixed(5)+', '+p.lng.toFixed(5)):'Site GPS not set — open Home, enable location on site, then tap “Set site GPS”.';
+}
+function mpSave(){
+  const ms=document.getElementById('mpSel');const i=parseInt(ms.value);const p=state.projects[i];
+  p.name=document.getElementById('mpName').value.trim()||p.name;
+  p.site=document.getElementById('mpSite').value.trim();
+  p.details=document.getElementById('mpDetails').value.trim();
+  p.emergency=document.getElementById('mpEmerg').value.trim()||'111';
+  p.radius=parseInt(document.getElementById('mpRadius').value)||200;
+  save();renderProjectHead();renderMgProjects();toast('Project saved ✅');
+}
+function addProject(){
+  const n=document.getElementById('npName').value.trim();if(!n){toast('Enter a project name');return;}
+  state.projects.push({name:n,site:document.getElementById('npSite').value.trim(),details:'',emergency:'111',lat:null,lng:null,radius:200});
+  save();renderMgProjects();renderProjectHead();
+  document.getElementById('npName').value='';document.getElementById('npSite').value='';
+  document.getElementById('addProjCard').classList.remove('open');toast('Project added ✅');
+}
+function renderMgProjects(){
+  const ms=document.getElementById('mpSel');if(!ms)return;
+  const cur=ms.value!==''?ms.value:String(state.currentProject||0);
+  ms.innerHTML=state.projects.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join('');
+  ms.value=cur<state.projects.length?cur:'0';mpLoad();
+}
 
 /* ===================== PPE ===================== */
 function renderPPE(){
