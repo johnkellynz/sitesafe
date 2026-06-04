@@ -164,7 +164,7 @@
 
 <!-- ============== WORKER: HOME ============== -->
 <section class="view active" id="v-home">
-  <h1>Good morning 👋</h1>
+  <h1 id="greeting">Good morning 👋</h1>
   <p class="sub" id="homeDate"></p>
 
   <div class="banner b-alert" id="riskAlert">
@@ -605,6 +605,9 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 
 /* ===================== HOME ===================== */
 function renderHome(){
+  const hr=new Date().getHours();
+  const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  document.getElementById('greeting').textContent=greet+' 👋';
   document.getElementById('homeDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('riskAlertText').textContent=state.alert||"No active alerts. Review site risks before you start.";
   document.getElementById('stCheck').textContent=session.prestartDone?'✓':'—';
