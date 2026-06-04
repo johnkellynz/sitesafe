@@ -44,13 +44,19 @@
   .card h3{margin:0 0 4px;font-size:15px}
   .card .meta{color:var(--muted);font-size:12px}
   /* ---------- Home tiles ---------- */
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sec-h{font-size:11.5px;font-weight:800;letter-spacing:.7px;color:var(--muted);margin:20px 2px 9px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;
     cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,box-shadow .12s;position:relative;overflow:hidden}
   .tile:active{transform:scale(.97)}
-  .tile .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:10px}
-  .tile b{display:block;font-size:14.5px}
-  .tile span{color:var(--muted);font-size:12px}
+  .tile .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:19px;margin-bottom:7px}
+  .tile b{display:block;font-size:13.5px}
+  .tile span{color:var(--muted);font-size:11px}
+  .grid.g3{grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .tile.sm3{padding:12px 5px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .tile.sm3 .ic{margin:0 0 6px;width:34px;height:34px;font-size:18px}
+  .tile.sm3 b{font-size:11.5px;line-height:1.2}
+  .tile.sm3 span{display:none}
   .tile .tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;color:#fff;
     background:var(--red);border-radius:999px;padding:2px 7px}
   .i-orange{background:rgba(245,130,32,.13);color:var(--orange)}
@@ -104,6 +110,8 @@
   .b-ok{background:#eafaf1;border:1px solid #bdeccf;color:#0c6b3a}
   .alertlist{margin:6px 0 0;padding-left:18px}
   .alertlist li{margin:3px 0}
+  /* swapped: site alert box uses the red tone */
+  #riskAlert{background:#fff1f1;border-color:#f3c2c2;color:#a02020}
   /* ---------- list items ---------- */
   .li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
   .li:last-child{border-bottom:0}
@@ -129,14 +137,15 @@
   .stat .s{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;box-shadow:var(--shadow)}
   .stat .s b{font-size:22px;display:block}
   .stat .s span{font-size:11px;color:var(--muted)}
-  .stat .s.todo{background:#fff1f1;border-color:#f3c2c2}
-  .stat .s.todo b{color:var(--red);font-size:13px;line-height:1.25;display:block;margin-bottom:2px}
+  .stat .s.todo{background:#fff4ec;border-color:#ffd2b0}
+  .stat .s.todo b{color:#9a4a00;font-size:13px;line-height:1.25;display:block;margin-bottom:2px}
   .stat .s.done{background:#eafaf1;border-color:#bdeccf}
   .stat .s.done b{color:var(--green)}
   .seg{display:flex;background:#eef2f7;border-radius:10px;padding:3px;margin-bottom:14px}
   .seg button{flex:1;border:0;background:transparent;padding:9px;border-radius:8px;font-weight:700;font-size:12.5px;color:var(--muted);cursor:pointer}
   .seg button.active{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
-  .scrollseg{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .scrollseg{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;scrollbar-width:none}
+  .scrollseg::-webkit-scrollbar{display:none}
   .scrollseg button{flex:0 0 auto;white-space:nowrap;padding:9px 12px}
   /* ---------- Project header ---------- */
   .projhead{background:linear-gradient(135deg,var(--navy),var(--steel));color:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
@@ -251,7 +260,6 @@
     <div class="ph-label">CURRENT PROJECT</div>
     <div class="ph-name" id="phName">—</div>
     <div class="ph-site" id="phSite"></div>
-    <div class="ph-details" id="phDetails"></div>
     <div class="ph-director" id="phDirector"></div>
     <div class="ph-row">
       <select id="phSwitch" onchange="switchProject(this.value)" aria-label="Switch project"></select>
@@ -264,7 +272,7 @@
 
   <div class="banner b-alert" id="riskAlert">
     <span class="bi">⚠️</span>
-    <div><b>Site alert from management</b><div id="riskAlertText"></div></div>
+    <div><b>SITE ALERT FROM MANAGEMENT</b><div id="riskAlertText"></div></div>
   </div>
 
   <div class="stat">
@@ -273,21 +281,30 @@
     <div class="s"><b id="stSign">—</b><span>Sign-on</span></div>
   </div>
 
-  <div class="grid">
-    <div class="tile" onclick="go('prestart')"><div class="ic i-orange">✅</div><b>Pre-Start Checklist</b><span>Run through before work</span></div>
-    <div class="tile" onclick="go('wellness')"><div class="ic i-green">💚</div><b>Wellness Check</b><span>30-second self-test</span></div>
-    <div class="tile" onclick="go('risks')"><div class="ic i-red">⚠️</div><b>Site Risks</b><span>Today’s hazards &amp; controls</span></div>
-    <div class="tile" onclick="go('report')"><div class="ic i-amber">📣</div><b>Report a Hazard</b><span>Goes straight to supervisor</span></div>
-    <div class="tile" onclick="go('nominate')"><div class="ic i-blue">🏅</div><b>Nominate a Mate</b><span>Recognise good safety</span></div>
-    <div class="tile" onclick="go('induction')"><div class="ic" style="background:rgba(124,77,255,.12);color:#7c4dff">🎓</div><b>Site Induction</b><span id="indTileSub">Sit or renew induction</span></div>
-    <div class="tile" onclick="go('equipment')"><div class="ic i-amber">🔌</div><b>Equipment Register</b><span>Test &amp; tag / electrical WoF</span></div>
-    <div class="tile" onclick="go('drawings')"><div class="ic i-blue">📐</div><b>Drawings</b><span>Project drawings</span></div>
-    <div class="tile" onclick="go('submittals')"><div class="ic i-amber">📚</div><b>Submittals</b><span>Manuals &amp; product docs</span></div>
-    <div class="tile" onclick="go('reminders')"><div class="ic i-green">⏰</div><b>Reminders</b><span>Breaks, water &amp; UV</span></div>
-    <div class="tile" onclick="go('muster')"><div class="ic i-red">🚨</div><b>Muster Point</b><span>Emergency assembly map</span></div>
-    <div class="tile" onclick="go('firstaid')"><div class="ic i-green">🩹</div><b>First Aid</b><span>First aiders &amp; guides</span></div>
-    <div class="tile" onclick="go('eap')"><div class="ic i-green">🤝</div><b>Mates’ Support</b><span>EAP — talk to someone</span></div>
-    <div class="tile" onclick="go('signoff')"><div class="ic i-navy" style="background:rgba(0,0,0,.08);color:var(--navy)">📋</div><b>Sign On / Off</b><span>Start &amp; end your shift</span></div>
+  <div class="sec-h">START YOUR SHIFT</div>
+  <div class="grid g3">
+    <div class="tile sm3" onclick="go('prestart')"><div class="ic i-orange">✅</div><b>Pre-Start</b><span>Run through before work</span></div>
+    <div class="tile sm3" onclick="go('wellness')"><div class="ic i-green">💚</div><b>Wellness</b><span>30-second self-test</span></div>
+    <div class="tile sm3" onclick="go('signoff')"><div class="ic" style="background:rgba(0,0,0,.08);color:var(--navy)">📋</div><b>Sign On / Off</b><span>Start &amp; end your shift</span></div>
+  </div>
+
+  <div class="sec-h">SITE INFORMATION</div>
+  <div class="grid g3">
+    <div class="tile sm3" onclick="go('risks')"><div class="ic i-red">⚠️</div><b>Site Risks</b><span></span></div>
+    <div class="tile sm3" onclick="go('equipment')"><div class="ic i-amber">🔌</div><b>Equipment</b><span></span></div>
+    <div class="tile sm3" onclick="go('drawings')"><div class="ic i-blue">📐</div><b>Drawings</b><span></span></div>
+    <div class="tile sm3" onclick="go('submittals')"><div class="ic i-amber">📚</div><b>Submittals</b><span></span></div>
+    <div class="tile sm3" onclick="go('muster')"><div class="ic i-red">🚨</div><b>Muster</b><span></span></div>
+  </div>
+
+  <div class="sec-h">SAFETY &amp; WELLBEING</div>
+  <div class="grid g3">
+    <div class="tile sm3" onclick="go('induction')"><div class="ic" style="background:rgba(124,77,255,.12);color:#7c4dff">🎓</div><b>Induction</b><span id="indTileSub"></span></div>
+    <div class="tile sm3" onclick="go('report')"><div class="ic i-amber">📣</div><b>Report</b><span></span></div>
+    <div class="tile sm3" onclick="go('firstaid')"><div class="ic i-green">🩹</div><b>First Aid</b><span></span></div>
+    <div class="tile sm3" onclick="go('eap')"><div class="ic i-green">🤝</div><b>Support</b><span></span></div>
+    <div class="tile sm3" onclick="go('reminders')"><div class="ic i-green">⏰</div><b>Reminders</b><span></span></div>
+    <div class="tile sm3" onclick="go('nominate')"><div class="ic i-blue">🏅</div><b>Nominate</b><span></span></div>
   </div>
 
   <div class="card" id="ppeHomeCard" style="margin-top:14px">
@@ -1196,6 +1213,7 @@ function mgmtTab(b){
   document.querySelectorAll('#mgmtTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
   document.querySelectorAll('.mtab').forEach(t=>t.classList.add('hide'));
   document.getElementById(b.dataset.tab).classList.remove('hide');
+  try{b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});}catch(e){}
   renderMgmt();
 }
 function renderMgmt(){
