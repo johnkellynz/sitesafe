@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SiteSafe — Pre-Start Safety App</title>
+<style>
+  :root{
+    --navy:#0f2238; --navy2:#16314f; --steel:#1f3f63;
+    --orange:#ff7a18; --amber:#ffc107; --green:#19b562; --red:#e23b3b;
+    --bg:#f4f6f9; --card:#ffffff; --line:#e2e8f0; --ink:#1a2433; --muted:#64748b;
+    --shadow:0 2px 10px rgba(15,34,56,.08);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.45;padding-bottom:78px}
+  /* ---------- Header ---------- */
+  header{position:sticky;top:0;z-index:40;background:linear-gradient(135deg,var(--navy),var(--steel));
+    color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);padding-top:max(12px,env(safe-area-inset-top))}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.3px;font-size:18px}
+  .logo .mark{width:30px;height:30px;border-radius:8px;background:var(--orange);
+    display:grid;place-items:center;font-size:17px;box-shadow:0 0 0 3px rgba(255,122,24,.25)}
+  .spacer{flex:1}
+  .roletog{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+  .roletog button{border:0;background:transparent;color:#cdd9e8;font-weight:700;font-size:12px;
+    padding:6px 12px;border-radius:999px;cursor:pointer}
+  .roletog button.active{background:#fff;color:var(--navy)}
+  .jobbadge{font-size:11px;color:#bcd;display:flex;align-items:center;gap:5px;margin-top:2px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .dot.on{background:var(--green);box-shadow:0 0 0 3px rgba(25,181,98,.25)}
+  /* ---------- Layout ---------- */
+  main{max-width:680px;margin:0 auto;padding:16px}
+  .view{display:none;animation:fade .25s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h1{font-size:20px;margin:2px 0 2px}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
+    margin-bottom:14px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 4px;font-size:15px}
+  .card .meta{color:var(--muted);font-size:12px}
+  /* ---------- Home tiles ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
+    cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,box-shadow .12s;position:relative;overflow:hidden}
+  .tile:active{transform:scale(.97)}
+  .tile .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:10px}
+  .tile b{display:block;font-size:14.5px}
+  .tile span{color:var(--muted);font-size:12px}
+  .tile .tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;color:#fff;
+    background:var(--red);border-radius:999px;padding:2px 7px}
+  .i-orange{background:rgba(255,122,24,.13);color:var(--orange)}
+  .i-green{background:rgba(25,181,98,.14);color:var(--green)}
+  .i-blue{background:rgba(31,63,99,.12);color:var(--steel)}
+  .i-amber{background:rgba(255,193,7,.18);color:#b8860b}
+  .i-red{background:rgba(226,59,59,.12);color:var(--red)}
+  /* ---------- Buttons ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;
+    font-weight:700;font-size:15px;padding:14px 18px;border-radius:12px;width:100%;transition:filter .12s}
+  .btn:active{filter:brightness(.93)}
+  .btn-primary{background:var(--orange);color:#fff}
+  .btn-green{background:var(--green);color:#fff}
+  .btn-navy{background:var(--navy);color:#fff}
+  .btn-red{background:var(--red);color:#fff}
+  .btn-ghost{background:#eef2f7;color:var(--ink)}
+  .btn.sm{width:auto;padding:9px 14px;font-size:13px;border-radius:10px}
+  .btnrow{display:flex;gap:10px;margin-top:8px}
+  /* ---------- Forms ---------- */
+  label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+  input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;
+    font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:84px;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,122,24,.15)}
+  /* ---------- Checklist ---------- */
+  .check{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
+  .check:last-child{border-bottom:0}
+  .check .txt{flex:1;font-size:14.5px}
+  .check .txt small{display:block;color:var(--muted);font-size:11.5px;font-weight:400}
+  .toggle{display:flex;gap:6px}
+  .toggle button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 11px;
+    font-weight:700;font-size:12px;cursor:pointer;color:var(--muted)}
+  .toggle button.yes.sel{background:var(--green);border-color:var(--green);color:#fff}
+  .toggle button.no.sel{background:var(--red);border-color:var(--red);color:#fff}
+  .toggle button.na.sel{background:var(--muted);border-color:var(--muted);color:#fff}
+  /* ---------- Risk table ---------- */
+  .rtable{width:100%;border-collapse:collapse;font-size:12.5px}
+  .rtable th{background:var(--navy);color:#fff;text-align:left;padding:9px 8px;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .rtable td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  .rtable tr:nth-child(even) td{background:#fafbfc}
+  .pill{display:inline-block;font-weight:800;font-size:10.5px;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .p-low{background:var(--green)} .p-med{background:var(--amber);color:#5a4500} .p-high{background:var(--orange)} .p-crit{background:var(--red)}
+  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--line)}
+  /* ---------- Alerts / banners ---------- */
+  .banner{border-radius:12px;padding:13px 14px;font-size:13.5px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
+  .banner .bi{font-size:18px;line-height:1}
+  .b-alert{background:#fff4ec;border:1px solid #ffd2b0;color:#9a4a00}
+  .b-info{background:#eef4fb;border:1px solid #cfe0f4;color:#1f3f63}
+  .b-ok{background:#eafaf1;border:1px solid #bdeccf;color:#0c6b3a}
+  /* ---------- list items ---------- */
+  .li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
+  .li:last-child{border-bottom:0}
+  .li .av{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-weight:800;color:#fff;flex:0 0 auto;font-size:14px}
+  .li .body{flex:1}
+  .li .body b{font-size:14px}
+  .li .body p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+  .stamp{font-size:11px;color:var(--muted);white-space:nowrap}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .chip{font-size:11px;font-weight:700;background:#eef2f7;color:var(--steel);border-radius:999px;padding:3px 10px}
+  .chip.sel{background:var(--orange);color:#fff}
+  /* ---------- Bottom nav ---------- */
+  nav.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:40;background:#fff;border-top:1px solid var(--line);
+    display:flex;justify-content:space-around;padding:6px 4px max(6px,env(safe-area-inset-bottom));box-shadow:0 -2px 14px rgba(15,34,56,.06)}
+  nav.tabbar button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;
+    font-size:10px;font-weight:600;color:var(--muted);cursor:pointer;padding:5px 8px;border-radius:10px;flex:1}
+  nav.tabbar button .ni{font-size:20px}
+  nav.tabbar button.active{color:var(--orange)}
+  .hide{display:none!important}
+  .progress{height:7px;background:#e9eef4;border-radius:99px;overflow:hidden;margin:4px 0 14px}
+  .progress i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+  .stat{display:flex;gap:10px;margin-bottom:14px}
+  .stat .s{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;box-shadow:var(--shadow)}
+  .stat .s b{font-size:22px;display:block}
+  .stat .s span{font-size:11px;color:var(--muted)}
+  .seg{display:flex;background:#eef2f7;border-radius:10px;padding:3px;margin-bottom:14px}
+  .seg button{flex:1;border:0;background:transparent;padding:9px;border-radius:8px;font-weight:700;font-size:12.5px;color:var(--muted);cursor:pointer}
+  .seg button.active{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
+  .req{color:var(--red)}
+  .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
+    padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:60;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:90%}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .emptymsg{text-align:center;color:var(--muted);font-size:13px;padding:28px 10px}
+  .smileys{display:flex;justify-content:space-between;gap:6px}
+  .smiley{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px 4px;text-align:center;cursor:pointer}
+  .smiley .e{font-size:26px}
+  .smiley small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+  .smiley.sel{border-color:var(--orange);background:#fff4ec;box-shadow:0 0 0 3px rgba(255,122,24,.15)}
+  .signbox{border:2px dashed var(--line);border-radius:12px;background:#fafbfc;height:120px;width:100%;touch-action:none;display:block}
+  .accordion h3{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .accordion .ac-body{display:none;margin-top:10px}
+  .accordion.open .ac-body{display:block}
+  .badge-n{background:var(--red);color:#fff;border-radius:999px;font-size:9px;font-weight:800;padding:1px 6px;position:absolute;top:2px;right:14px}
+  .navwrap{position:relative;flex:1;display:flex}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo"><span class="mark">⛑️</span> SiteSafe</div>
+    <div class="jobbadge" id="jobBadge"><span class="dot" id="jobDot"></span><span id="jobText">Not signed on</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="roletog">
+    <button id="roleWorker" class="active" onclick="setRole('worker')">Worker</button>
+    <button id="roleMgmt" onclick="setRole('mgmt')">Management</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============== WORKER: HOME ============== -->
+<section class="view active" id="v-home">
+  <h1>Good morning 👋</h1>
+  <p class="sub" id="homeDate"></p>
+
+  <div class="banner b-alert" id="riskAlert">
+    <span class="bi">⚠️</span>
+    <div><b>Site alert from management.</b> <span id="riskAlertText">Tap “Site Risks” to review today’s hazards before you start.</span></div>
+  </div>
+
+  <div class="stat">
+    <div class="s"><b id="stCheck">—</b><span>Pre-start</span></div>
+    <div class="s"><b id="stWell">—</b><span>Wellness</span></div>
+    <div class="s"><b id="stSign">—</b><span>Sign-on</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="tile" onclick="go('prestart')"><div class="ic i-orange">✅</div><b>Pre-Start Checklist</b><span>Run through before work</span></div>
+    <div class="tile" onclick="go('wellness')"><div class="ic i-green">💚</div><b>Wellness Check</b><span>30-second self-test</span></div>
+    <div class="tile" onclick="go('risks')"><div class="ic i-red">⚠️</div><b>Site Risks</b><span>Today’s hazards &amp; controls</span></div>
+    <div class="tile" onclick="go('report')"><div class="ic i-amber">📣</div><b>Report a Hazard</b><span>Goes straight to supervisor</span></div>
+    <div class="tile" onclick="go('nominate')"><div class="ic i-blue">🏅</div><b>Nominate a Mate</b><span>Recognise good safety</span></div>
+    <div class="tile" onclick="go('signoff')"><div class="ic i-navy" style="background:rgba(15,34,56,.1);color:var(--navy)">📋</div><b>Sign On / Off</b><span>Start &amp; end your shift</span></div>
+  </div>
+</section>
+
+<!-- ============== WORKER: PRE-START ============== -->
+<section class="view" id="v-prestart">
+  <h1>Pre-Start Checklist</h1>
+  <p class="sub">Confirm each item before commencing work. Required to sign on.</p>
+  <div class="progress"><i id="psBar"></i></div>
+
+  <div class="card">
+    <div id="checklist"></div>
+  </div>
+  <div class="card">
+    <h3>Anything to flag?</h3>
+    <textarea id="psNotes" placeholder="Optional notes — e.g. damaged guardrail on level 2, will report."></textarea>
+  </div>
+  <button class="btn btn-primary" onclick="finishPrestart()">Complete Pre-Start &amp; Continue to Sign-On</button>
+</section>
+
+<!-- ============== WORKER: SIGN ON/OFF ============== -->
+<section class="view" id="v-signoff">
+  <h1>Sign On / Off</h1>
+  <p class="sub">Confirm your details and acknowledge today’s safety controls.</p>
+
+  <div id="signOnForm">
+    <div class="card">
+      <label>Your name <span class="req">*</span></label>
+      <input id="soName" placeholder="Full name">
+      <label>Company / trade <span class="req">*</span></label>
+      <input id="soCompany" placeholder="e.g. Apex Electrical">
+      <label>Job / site <span class="req">*</span></label>
+      <select id="soJob">
+        <option>Riverside Tower — Level 14 fit-out</option>
+        <option>Harbour Industrial Shed B</option>
+        <option>Metro Rail — Platform Works</option>
+        <option>Northgate Warehouse Extension</option>
+      </select>
+      <label>Inducted &amp; understand today’s risk controls?</label>
+      <div class="toggle" style="margin-top:4px">
+        <button class="yes" id="soAck" onclick="this.classList.toggle('sel')">Yes, acknowledged</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Signature</h3>
+      <p class="meta">Sign in the box below.</p>
+      <canvas class="signbox" id="sig" width="600" height="120"></canvas>
+      <div class="btnrow"><button class="btn-ghost btn sm" onclick="clearSig()">Clear</button></div>
+    </div>
+    <button class="btn btn-green" onclick="signOn()">Sign On to Job</button>
+  </div>
+
+  <div id="signedOnPanel" class="hide">
+    <div class="banner b-ok"><span class="bi">✅</span><div><b>You’re signed on.</b> <span id="signedOnMeta"></span></div></div>
+    <div class="card">
+      <h3>End of shift</h3>
+      <p class="meta">Confirm the area is left safe and tidy, then sign off.</p>
+      <div id="signoffChecks"></div>
+    </div>
+    <button class="btn btn-navy" onclick="signOff()">Sign Off &amp; Email Summary to Management</button>
+  </div>
+</section>
+
+<!-- ============== WORKER: SITE RISKS ============== -->
+<section class="view" id="v-risks">
+  <h1>Today’s Site Risks</h1>
+  <p class="sub" id="risksUpdated">Published by site management</p>
+  <div class="banner b-info"><span class="bi">ℹ️</span><div id="riskSummary">Review all hazards and the isolation / minimisation controls before commencing work.</div></div>
+  <div class="card">
+    <div class="scroller">
+      <table class="rtable" id="riskTable"></table>
+    </div>
+  </div>
+  <p class="sub" style="font-size:11.5px">Controls follow the hierarchy: <b>Eliminate → Isolate → Engineer → Administer → PPE</b>.</p>
+</section>
+
+<!-- ============== WORKER: WELLNESS ============== -->
+<section class="view" id="v-wellness">
+  <h1>Morning Wellness Check</h1>
+  <p class="sub">Confidential self-assessment. Helps you and your crew stay safe.</p>
+
+  <div class="card">
+    <h3>How are you feeling today?</h3>
+    <div class="smileys" id="wellMood">
+      <div class="smiley" data-v="great" onclick="pickMood(this)"><div class="e">😄</div><small>Great</small></div>
+      <div class="smiley" data-v="good" onclick="pickMood(this)"><div class="e">🙂</div><small>Good</small></div>
+      <div class="smiley" data-v="ok" onclick="pickMood(this)"><div class="e">😐</div><small>OK</small></div>
+      <div class="smiley" data-v="low" onclick="pickMood(this)"><div class="e">😕</div><small>Low</small></div>
+      <div class="smiley" data-v="rough" onclick="pickMood(this)"><div class="e">😣</div><small>Rough</small></div>
+    </div>
+  </div>
+
+  <div class="card" id="wellQs"></div>
+
+  <div class="card">
+    <h3>Fit for work?</h3>
+    <p class="meta">Be honest — this only goes to your supervisor if you flag a concern.</p>
+    <div class="seg" id="wellFit">
+      <button class="active" data-v="yes" onclick="pickFit(this)">Fit for work</button>
+      <button data-v="concern" onclick="pickFit(this)">I have a concern</button>
+    </div>
+  </div>
+  <button class="btn btn-green" onclick="submitWellness()">Submit Wellness Check</button>
+</section>
+
+<!-- ============== WORKER: REPORT HAZARD ============== -->
+<section class="view" id="v-report">
+  <h1>Report Something Unsafe</h1>
+  <p class="sub">Sent immediately to the site supervisor.</p>
+  <div class="banner b-alert"><span class="bi">🚨</span><div>If this is an <b>emergency</b> or someone is injured, stop work and call <b>000 / site emergency line</b> first.</div></div>
+
+  <div class="card">
+    <label>What’s the issue? <span class="req">*</span></label>
+    <textarea id="rpWhat" placeholder="Describe what you saw — e.g. exposed live cable near scaffold bay 3."></textarea>
+
+    <label>Type</label>
+    <div class="chips" id="rpType">
+      <span class="chip" onclick="toggleChip(this)">Electrical</span>
+      <span class="chip" onclick="toggleChip(this)">Working at heights</span>
+      <span class="chip" onclick="toggleChip(this)">Slip / trip</span>
+      <span class="chip" onclick="toggleChip(this)">Plant / machinery</span>
+      <span class="chip" onclick="toggleChip(this)">Hazardous material</span>
+      <span class="chip" onclick="toggleChip(this)">Housekeeping</span>
+      <span class="chip" onclick="toggleChip(this)">Near miss</span>
+    </div>
+
+    <label>Location on site <span class="req">*</span></label>
+    <input id="rpWhere" placeholder="e.g. Level 2, east stairwell">
+
+    <label>How urgent?</label>
+    <div class="seg" id="rpUrg">
+      <button data-v="monitor" onclick="pickSeg(this,'rpUrg')">Monitor</button>
+      <button class="active" data-v="soon" onclick="pickSeg(this,'rpUrg')">Action soon</button>
+      <button data-v="now" onclick="pickSeg(this,'rpUrg')">Stop work now</button>
+    </div>
+
+    <label>Add photo (optional)</label>
+    <input type="file" accept="image/*" id="rpPhoto">
+  </div>
+  <button class="btn btn-red" onclick="submitReport()">🚨 Send to Supervisor Now</button>
+</section>
+
+<!-- ============== WORKER: NOMINATE ============== -->
+<section class="view" id="v-nominate">
+  <h1>Nominate a Mate</h1>
+  <p class="sub">Recognise a colleague for good safety or initiative.</p>
+
+  <div class="card">
+    <label>Who are you nominating? <span class="req">*</span></label>
+    <input id="nmWho" placeholder="Name or trade">
+
+    <label>What did they do? <span class="req">*</span></label>
+    <textarea id="nmWhat" placeholder="e.g. Spotted a frayed sling and pulled the lift before anyone was at risk."></textarea>
+
+    <label>Category</label>
+    <div class="chips" id="nmCat">
+      <span class="chip sel" onclick="radioChip(this,'nmCat')">Safe behaviour</span>
+      <span class="chip" onclick="radioChip(this,'nmCat')">Good initiative</span>
+      <span class="chip" onclick="radioChip(this,'nmCat')">Helped a mate</span>
+      <span class="chip" onclick="radioChip(this,'nmCat')">Hazard spotted</span>
+      <span class="chip" onclick="radioChip(this,'nmCat')">Leadership</span>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="submitNomination()">🏅 Submit Nomination</button>
+
+  <div class="card" style="margin-top:18px">
+    <h3>Recent recognitions 🎉</h3>
+    <div id="nomFeed"></div>
+  </div>
+</section>
+
+<!-- ============== MANAGEMENT CONSOLE ============== -->
+<section class="view" id="v-mgmt">
+  <h1>Management Console</h1>
+  <p class="sub">Publish risks, manage controls and monitor crew safety.</p>
+
+  <div class="seg" id="mgmtTabs">
+    <button class="active" data-tab="m-risks" onclick="mgmtTab(this)">Site Risks</button>
+    <button data-tab="m-reports" onclick="mgmtTab(this)">Reports</button>
+    <button data-tab="m-well" onclick="mgmtTab(this)">Wellness</button>
+    <button data-tab="m-noms" onclick="mgmtTab(this)">Kudos</button>
+  </div>
+
+  <!-- Risk register editor -->
+  <div id="m-risks" class="mtab">
+    <div class="card">
+      <h3>Daily site alert</h3>
+      <p class="meta">This banner shows on every worker’s home screen.</p>
+      <textarea id="mgAlert" placeholder="e.g. Crane lift on east face 10am–2pm. Exclusion zone in force."></textarea>
+      <div class="btnrow"><button class="btn btn-primary sm" onclick="publishAlert()">Publish alert</button></div>
+    </div>
+
+    <div class="card">
+      <h3>Risk Analysis Register</h3>
+      <p class="meta">Hazard → risk rating → isolation / minimisation controls.</p>
+      <div class="scroller" style="margin-top:10px"><table class="rtable" id="mgRiskTable"></table></div>
+    </div>
+
+    <div class="card accordion" id="addHazCard">
+      <h3 onclick="document.getElementById('addHazCard').classList.toggle('open')">➕ Add / update a hazard <span>▾</span></h3>
+      <div class="ac-body">
+        <label>Hazard <span class="req">*</span></label>
+        <input id="hzName" placeholder="e.g. Overhead crane lift">
+        <label>Who / what is at risk</label>
+        <input id="hzRisk" placeholder="e.g. Workers below lift path">
+        <label>Likelihood</label>
+        <select id="hzLike"><option>Rare</option><option selected>Possible</option><option>Likely</option><option>Almost certain</option></select>
+        <label>Consequence</label>
+        <select id="hzCons"><option>Minor</option><option>Moderate</option><option selected>Major</option><option>Severe</option></select>
+        <label>Isolation / minimisation controls <span class="req">*</span></label>
+        <textarea id="hzCtrl" placeholder="e.g. Exclusion zone barricaded; spotter posted; no entry under load; hi-vis & hard hat."></textarea>
+        <button class="btn btn-navy" style="margin-top:12px" onclick="addHazard()">Save Hazard to Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports inbox -->
+  <div id="m-reports" class="mtab hide">
+    <div class="stat">
+      <div class="s"><b id="rpNow">0</b><span>Stop-work</span></div>
+      <div class="s"><b id="rpSoon">0</b><span>Action soon</span></div>
+      <div class="s"><b id="rpTot">0</b><span>Total open</span></div>
+    </div>
+    <div class="card"><div id="reportsFeed"></div></div>
+  </div>
+
+  <!-- Wellness overview -->
+  <div id="m-well" class="mtab hide">
+    <div class="card">
+      <h3>Crew wellness — today</h3>
+      <p class="meta">Self-reported, anonymised unless a concern is flagged.</p>
+      <div id="wellFeed"></div>
+    </div>
+  </div>
+
+  <!-- Kudos -->
+  <div id="m-noms" class="mtab hide">
+    <div class="card">
+      <h3>Safety recognitions</h3>
+      <p class="meta">Nominations from the crew.</p>
+      <div id="mgNomFeed"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============== BOTTOM NAV ============== -->
+<nav class="tabbar" id="workerNav">
+  <button class="active" data-v="home" onclick="go('home')"><span class="ni">🏠</span>Home</button>
+  <button data-v="prestart" onclick="go('prestart')"><span class="ni">✅</span>Pre-Start</button>
+  <button data-v="risks" onclick="go('risks')"><span class="ni">⚠️</span>Risks</button>
+  <div class="navwrap"><button data-v="report" onclick="go('report')" style="width:100%"><span class="ni">📣</span>Report</button></div>
+  <button data-v="signoff" onclick="go('signoff')"><span class="ni">📋</span>Sign</button>
+</nav>
+<nav class="tabbar hide" id="mgmtNav">
+  <button class="active" onclick="go('mgmt')"><span class="ni">🛠️</span>Console</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== STATE ===================== */
+const LS='sitesafe_v1';
+const seed={
+  alert:"Crane lift on the east face 10:00–14:00 — exclusion zone in force. Wet weather: watch for slips on level 3.",
+  alertTime:Date.now(),
+  hazards:[
+    {h:"Overhead crane lift (east face)",risk:"Workers below load path",like:"Likely",cons:"Severe",ctrl:"ELIMINATE work under load. ISOLATE: barricaded exclusion zone + spotter. Tag lines on all loads. Hard hat & hi-vis mandatory."},
+    {h:"Work at heights — level 14 edge",risk:"Fall >2m",like:"Possible",cons:"Severe",ctrl:"ISOLATE: edge protection / guardrail in place. Harness + anchor for any gap work. Permit required."},
+    {h:"Temporary electrical leads",risk:"Electric shock",like:"Possible",cons:"Major",ctrl:"ENGINEER: RCD/safety switch on all circuits. Leads off ground on stands. Daily tag & test. Damaged leads removed."},
+    {h:"Wet surfaces (level 3)",risk:"Slip / trip",like:"Likely",cons:"Moderate",ctrl:"ADMIN: wet-floor signage, redirect traffic. Mop & dry zones. Non-slip footwear (PPE)."},
+    {h:"Silica dust — concrete cutting",risk:"Respiratory harm",like:"Possible",cons:"Major",ctrl:"ENGINEER: on-tool water suppression + extraction. PPE: P2 respirator. Limit exposure time; exclusion of non-essential crew."}
+  ],
+  reports:[
+    {what:"Guardrail loose at level 2 east stairwell",where:"Level 2, east stairwell",type:["Working at heights"],urg:"soon",by:"M. Tran",t:Date.now()-3600e3}
+  ],
+  wellness:[
+    {mood:"good",fit:"yes",by:"Anon",t:Date.now()-5400e3},
+    {mood:"ok",fit:"yes",by:"Anon",t:Date.now()-7200e3}
+  ],
+  nominations:[
+    {who:"Dan R.",what:"Stopped a reversing truck that hadn’t seen a worker — quick eyes, no incident.",cat:"Safe behaviour",by:"S. Patel",t:Date.now()-86400e3},
+    {who:"Priya K.",what:"Built a tidy lead-stand setup that cleared all trip hazards from the walkway.",cat:"Good initiative",by:"J. Wells",t:Date.now()-172800e3}
+  ]
+};
+let state=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(LS));return s&&s.hazards?s:structuredClone(seed)}catch(e){return structuredClone(seed)}}
+function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+
+/* session (not persisted long-term) */
+let session={prestartDone:false,wellnessDone:false,signedOn:false,checks:{},name:"",company:"",job:""};
+
+/* ===================== NAV ===================== */
+let role='worker';
+function setRole(r){
+  role=r;
+  document.getElementById('roleWorker').classList.toggle('active',r==='worker');
+  document.getElementById('roleMgmt').classList.toggle('active',r==='mgmt');
+  document.getElementById('workerNav').classList.toggle('hide',r!=='worker');
+  document.getElementById('mgmtNav').classList.toggle('hide',r!=='mgmt');
+  if(r==='mgmt'){go('mgmt');renderMgmt();}else{go('home');}
+}
+function go(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+  const map={home:'v-home',prestart:'v-prestart',risks:'v-risks',wellness:'v-wellness',report:'v-report',nominate:'v-nominate',signoff:'v-signoff',mgmt:'v-mgmt'};
+  document.getElementById(map[v]).classList.add('active');
+  document.querySelectorAll('#workerNav button').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
+  if(v==='risks')renderRisks();
+  if(v==='mgmt')renderMgmt();
+  if(v==='signoff')setTimeout(initSig,0);
+  window.scrollTo(0,0);
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+
+/* ===================== HOME ===================== */
+function renderHome(){
+  document.getElementById('homeDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('riskAlertText').textContent=state.alert||"No active alerts. Review site risks before you start.";
+  document.getElementById('stCheck').textContent=session.prestartDone?'✓':'—';
+  document.getElementById('stWell').textContent=session.wellnessDone?'✓':'—';
+  document.getElementById('stSign').textContent=session.signedOn?'On':'—';
+}
+
+/* ===================== PRE-START ===================== */
+const checklistItems=[
+  ["I’ve reviewed today’s site risks & controls","Site Risks tab"],
+  ["Correct PPE on & in good condition","Hard hat, boots, hi-vis, eye/ear as required"],
+  ["My tools & equipment are tested & tagged",""],
+  ["Work area inspected — access clear & safe",""],
+  ["Permits in place (heights / hot work / confined space)","If applicable"],
+  ["Emergency exits, first aid & assembly point known",""],
+  ["I’m physically & mentally fit for today’s tasks",""]
+];
+function renderChecklist(){
+  const c=document.getElementById('checklist');c.innerHTML='';
+  checklistItems.forEach((it,i)=>{
+    const row=document.createElement('div');row.className='check';
+    row.innerHTML=`<div class="txt">${it[0]}${it[1]?`<small>${it[1]}</small>`:''}</div>
+      <div class="toggle">
+        <button class="yes" onclick="setCheck(${i},'yes',this)">Yes</button>
+        <button class="no" onclick="setCheck(${i},'no',this)">No</button>
+        <button class="na" onclick="setCheck(${i},'na',this)">N/A</button>
+      </div>`;
+    c.appendChild(row);
+  });
+  updatePsBar();
+}
+function setCheck(i,v,btn){
+  session.checks[i]=v;
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  updatePsBar();
+}
+function updatePsBar(){
+  const done=Object.keys(session.checks).length;
+  document.getElementById('psBar').style.width=(done/checklistItems.length*100)+'%';
+}
+function finishPrestart(){
+  const done=Object.keys(session.checks).length;
+  if(done<checklistItems.length){toast('Please answer every item first');return;}
+  const nos=Object.entries(session.checks).filter(([k,v])=>v==='no');
+  session.prestartDone=true;renderHome();
+  if(nos.length){toast('Flagged items noted — see your supervisor');}
+  else{toast('Pre-start complete ✅');}
+  go('signoff');
+}
+
+/* ===================== SIGN ON / OFF ===================== */
+let sigCtx,drawing=false,sigEmpty=true,sigWired=false;
+function initSig(){
+  const cv=document.getElementById('sig');if(!cv||cv.offsetWidth===0)return;
+  const ratio=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*ratio;cv.height=120*ratio;
+  sigCtx=cv.getContext('2d');sigCtx.scale(ratio,ratio);
+  sigCtx.lineWidth=2.2;sigCtx.lineCap='round';sigCtx.lineJoin='round';sigCtx.strokeStyle='#16314f';
+  sigEmpty=true;
+  if(sigWired)return;
+  sigWired=true;
+  const pos=e=>{const r=cv.getBoundingClientRect();const p=e.touches?e.touches[0]:e;return[p.clientX-r.left,p.clientY-r.top];};
+  const start=e=>{drawing=true;sigEmpty=false;const[x,y]=pos(e);sigCtx.beginPath();sigCtx.moveTo(x,y);e.preventDefault();};
+  const move=e=>{if(!drawing)return;const[x,y]=pos(e);sigCtx.lineTo(x,y);sigCtx.stroke();e.preventDefault();};
+  const end=()=>drawing=false;
+  cv.addEventListener('mousedown',start);cv.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  cv.addEventListener('touchstart',start,{passive:false});cv.addEventListener('touchmove',move,{passive:false});cv.addEventListener('touchend',end);
+}
+function clearSig(){const cv=document.getElementById('sig');sigCtx.clearRect(0,0,cv.width,cv.height);sigEmpty=true;}
+function signOn(){
+  const name=document.getElementById('soName').value.trim();
+  const comp=document.getElementById('soCompany').value.trim();
+  const job=document.getElementById('soJob').value;
+  if(!name||!comp){toast('Please enter your name and company');return;}
+  if(!session.prestartDone){toast('Complete your pre-start checklist first');go('prestart');return;}
+  if(sigEmpty){toast('Please add your signature');return;}
+  session.signedOn=true;session.name=name;session.company=comp;session.job=job;session.signOnTime=Date.now();
+  document.getElementById('signOnForm').classList.add('hide');
+  document.getElementById('signedOnPanel').classList.remove('hide');
+  document.getElementById('signedOnMeta').textContent=`${name} · ${comp} · ${job} · ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+  renderSignoffChecks();
+  const dot=document.getElementById('jobDot');dot.classList.add('on');
+  document.getElementById('jobText').textContent=job.split('—')[0].trim()+' · On site';
+  renderHome();toast('Signed on ✅ Have a safe shift');
+}
+const offItems=["Work area left clean, safe & tidy","Tools & equipment secured / removed","Isolations & barricades left as required","No hazards left for next crew"];
+function renderSignoffChecks(){
+  const c=document.getElementById('signoffChecks');c.innerHTML='';
+  offItems.forEach((it,i)=>{
+    const r=document.createElement('div');r.className='check';
+    r.innerHTML=`<div class="txt">${it}</div><div class="toggle">
+      <button class="yes" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">Yes</button>
+      <button class="na" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">N/A</button></div>`;
+    c.appendChild(r);
+  });
+}
+function signOff(){
+  if(!session.signedOn){toast('You are not signed on');return;}
+  const dur=session.signOnTime?Math.round((Date.now()-session.signOnTime)/60000):0;
+  const checks=checklistItems.map((it,i)=>`- ${it[0]}: ${(session.checks[i]||'—').toUpperCase()}`).join('\n');
+  const notes=document.getElementById('psNotes').value.trim();
+  const body=
+`SITESAFE — DAILY SIGN-OFF SUMMARY
+=================================
+Worker:   ${session.name}
+Company:  ${session.company}
+Job/Site: ${session.job}
+Date:     ${new Date().toLocaleString()}
+On-site:  ~${dur} min
+
+PRE-START CHECKLIST
+${checks}
+${notes?'\nNotes: '+notes:''}
+
+WELLNESS CHECK: ${session.wellnessDone?'Completed':'Not completed'}
+END-OF-SHIFT: Area confirmed left safe & tidy.
+
+Signed on with digital signature on device.
+-- Sent from SiteSafe`;
+  const subject=encodeURIComponent(`Sign-off — ${session.name} — ${session.job}`);
+  window.location.href=`mailto:management@example.com?subject=${subject}&body=${encodeURIComponent(body)}`;
+  session.signedOn=false;
+  document.getElementById('jobDot').classList.remove('on');
+  document.getElementById('jobText').textContent='Signed off';
+  document.getElementById('signOnForm').classList.remove('hide');
+  document.getElementById('signedOnPanel').classList.add('hide');
+  renderHome();
+  toast('Sign-off summary ready to email 📧');
+}
+
+/* ===================== RISKS TABLE ===================== */
+function ratePill(like,cons){
+  const L={Rare:1,Possible:2,Likely:3,"Almost certain":4}[like]||2;
+  const C={Minor:1,Moderate:2,Major:3,Severe:4}[cons]||2;
+  const s=L*C;
+  if(s>=12)return['CRITICAL','p-crit'];
+  if(s>=8)return['HIGH','p-high'];
+  if(s>=4)return['MEDIUM','p-med'];
+  return['LOW','p-low'];
+}
+function renderRisks(){
+  document.getElementById('risksUpdated').textContent='Published by site management · updated '+timeAgo(state.alertTime);
+  document.getElementById('riskSummary').textContent=state.alert||'Review all hazards and controls before commencing work.';
+  const t=document.getElementById('riskTable');
+  t.innerHTML='<tr><th>Hazard</th><th>Risk</th><th>Rating</th><th>Isolation / Minimisation Controls</th></tr>';
+  state.hazards.forEach(h=>{
+    const[txt,cls]=ratePill(h.like,h.cons);
+    t.innerHTML+=`<tr><td><b>${esc(h.h)}</b></td><td>${esc(h.risk)}</td><td><span class="pill ${cls}">${txt}</span><br><small style="color:var(--muted)">${h.like}/${h.cons}</small></td><td>${esc(h.ctrl)}</td></tr>`;
+  });
+}
+
+/* ===================== WELLNESS ===================== */
+let wMood=null,wFit='yes';const wellAnswers={};
+const wellQuestions=["Did you sleep well last night?","Feeling free of fatigue / pain?","Free of medication that affects work?","Mentally focused & ready?"];
+function renderWellQs(){
+  const c=document.getElementById('wellQs');c.innerHTML='<h3>Quick check</h3>';
+  wellQuestions.forEach((q,i)=>{
+    const r=document.createElement('div');r.className='check';
+    r.innerHTML=`<div class="txt">${q}</div><div class="toggle">
+      <button class="yes" onclick="wellAns(${i},'yes',this)">Yes</button>
+      <button class="no" onclick="wellAns(${i},'no',this)">No</button></div>`;
+    c.appendChild(r);
+  });
+}
+function wellAns(i,v,btn){wellAnswers[i]=v;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');}
+function pickMood(el){document.querySelectorAll('#wellMood .smiley').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');wMood=el.dataset.v;}
+function pickFit(b){document.querySelectorAll('#wellFit button').forEach(x=>x.classList.remove('active'));b.classList.add('active');wFit=b.dataset.v;}
+function submitWellness(){
+  if(!wMood){toast('Select how you’re feeling');return;}
+  session.wellnessDone=true;
+  state.wellness.unshift({mood:wMood,fit:wFit,by:session.name||'Anon',t:Date.now()});
+  save();renderHome();
+  if(wFit==='concern'){toast('Logged — your supervisor will check in privately');}
+  else{toast('Thanks — stay safe today 💚');}
+  go('home');
+}
+
+/* ===================== REPORT ===================== */
+let rpUrg='soon';
+function toggleChip(el){el.classList.toggle('sel');}
+function pickSeg(b,id){document.querySelectorAll('#'+id+' button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(id==='rpUrg')rpUrg=b.dataset.v;}
+function submitReport(){
+  const what=document.getElementById('rpWhat').value.trim();
+  const where=document.getElementById('rpWhere').value.trim();
+  if(!what||!where){toast('Add what you saw and where');return;}
+  const types=[...document.querySelectorAll('#rpType .chip.sel')].map(c=>c.textContent);
+  state.reports.unshift({what,where,type:types,urg:rpUrg,by:session.name||'Crew member',t:Date.now()});
+  save();
+  document.getElementById('rpWhat').value='';document.getElementById('rpWhere').value='';
+  document.querySelectorAll('#rpType .chip.sel').forEach(c=>c.classList.remove('sel'));
+  toast(rpUrg==='now'?'🚨 Stop-work alert sent to supervisor':'Report sent to supervisor ✅');
+  go('home');
+}
+
+/* ===================== NOMINATE ===================== */
+function radioChip(el,id){document.querySelectorAll('#'+id+' .chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function submitNomination(){
+  const who=document.getElementById('nmWho').value.trim();
+  const what=document.getElementById('nmWhat').value.trim();
+  if(!who||!what){toast('Add who and what they did');return;}
+  const cat=document.querySelector('#nmCat .chip.sel')?.textContent||'Safe behaviour';
+  state.nominations.unshift({who,what,cat,by:session.name||'Crew member',t:Date.now()});
+  save();renderNomFeed();
+  document.getElementById('nmWho').value='';document.getElementById('nmWhat').value='';
+  toast('🏅 Nomination submitted — nice one!');
+}
+function renderNomFeed(){
+  const f=document.getElementById('nomFeed');if(!f)return;
+  f.innerHTML=state.nominations.slice(0,5).map(n=>liItem(n.who,`“${esc(n.what)}”`,n.cat,n.t,'🏅',avatarColor(n.who))).join('')||'<div class="emptymsg">No recognitions yet.</div>';
+}
+
+/* ===================== MANAGEMENT ===================== */
+function mgmtTab(b){
+  document.querySelectorAll('#mgmtTabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.add('hide'));
+  document.getElementById(b.dataset.tab).classList.remove('hide');
+  renderMgmt();
+}
+function renderMgmt(){
+  document.getElementById('mgAlert').value=state.alert||'';
+  // risk register
+  const t=document.getElementById('mgRiskTable');
+  t.innerHTML='<tr><th>Hazard</th><th>Rating</th><th>Controls</th><th></th></tr>';
+  state.hazards.forEach((h,i)=>{
+    const[txt,cls]=ratePill(h.like,h.cons);
+    t.innerHTML+=`<tr><td><b>${esc(h.h)}</b><br><small style="color:var(--muted)">${esc(h.risk)}</small></td>
+      <td><span class="pill ${cls}">${txt}</span></td><td>${esc(h.ctrl)}</td>
+      <td><button class="toggle" style="border:0;background:transparent;color:var(--red);cursor:pointer;font-weight:800" onclick="delHazard(${i})">✕</button></td></tr>`;
+  });
+  // reports
+  const open=state.reports;
+  document.getElementById('rpNow').textContent=open.filter(r=>r.urg==='now').length;
+  document.getElementById('rpSoon').textContent=open.filter(r=>r.urg==='soon').length;
+  document.getElementById('rpTot').textContent=open.length;
+  const rf=document.getElementById('reportsFeed');
+  rf.innerHTML=open.map((r,i)=>{
+    const urgMap={now:['STOP WORK','p-crit'],soon:['ACTION SOON','p-high'],monitor:['MONITOR','p-med']};
+    const[ut,uc]=urgMap[r.urg]||urgMap.soon;
+    return `<div class="li"><div class="av" style="background:var(--red)">!</div><div class="body">
+      <b>${esc(r.what)}</b> <span class="pill ${uc}" style="margin-left:4px">${ut}</span>
+      <p>📍 ${esc(r.where)} · ${r.type&&r.type.length?esc(r.type.join(', '))+' · ':''}by ${esc(r.by)}</p>
+      <div class="btnrow"><button class="btn-green btn sm" onclick="resolveReport(${i})">Mark resolved</button></div>
+      </div><span class="stamp">${timeAgo(r.t)}</span></div>`;
+  }).join('')||'<div class="emptymsg">No open reports. 🎉</div>';
+  // wellness
+  const wf=document.getElementById('wellFeed');
+  const moodE={great:'😄',good:'🙂',ok:'😐',low:'😕',rough:'😣'};
+  wf.innerHTML=state.wellness.slice(0,12).map(w=>
+    `<div class="li"><div class="av" style="background:${w.fit==='concern'?'var(--amber)':'var(--green)'};color:#fff">${moodE[w.mood]||'🙂'}</div>
+    <div class="body"><b>${w.fit==='concern'?'⚠️ Concern flagged':'Fit for work'}</b><p>Mood: ${w.mood} · ${esc(w.by)}</p></div>
+    <span class="stamp">${timeAgo(w.t)}</span></div>`).join('')||'<div class="emptymsg">No check-ins yet.</div>';
+  // noms
+  const mn=document.getElementById('mgNomFeed');
+  mn.innerHTML=state.nominations.map(n=>liItem(n.who,`“${esc(n.what)}”`,n.cat+' · by '+esc(n.by),n.t,'🏅',avatarColor(n.who))).join('')||'<div class="emptymsg">No nominations yet.</div>';
+}
+function publishAlert(){state.alert=document.getElementById('mgAlert').value.trim();state.alertTime=Date.now();save();renderHome();toast('Alert published to all workers 📢');}
+function addHazard(){
+  const h=document.getElementById('hzName').value.trim();
+  const ctrl=document.getElementById('hzCtrl').value.trim();
+  if(!h||!ctrl){toast('Add a hazard name and its controls');return;}
+  state.hazards.push({h,risk:document.getElementById('hzRisk').value.trim()||'See controls',like:document.getElementById('hzLike').value,cons:document.getElementById('hzCons').value,ctrl});
+  save();renderMgmt();
+  ['hzName','hzRisk','hzCtrl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addHazCard').classList.remove('open');
+  toast('Hazard added to register ✅');
+}
+function delHazard(i){state.hazards.splice(i,1);save();renderMgmt();toast('Hazard removed');}
+function resolveReport(i){state.reports.splice(i,1);save();renderMgmt();toast('Report marked resolved ✅');}
+
+/* ===================== HELPERS ===================== */
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function avatarColor(s){const c=['#1f3f63','#ff7a18','#19b562','#7c4dff','#e23b3b','#0aa1b8'];let h=0;for(const ch of(s||'x'))h+=ch.charCodeAt(0);return c[h%c.length];}
+function liItem(title,sub,tag,t,ic,col){
+  const init=(title||'?').trim()[0]||'?';
+  return `<div class="li"><div class="av" style="background:${col}">${init}</div><div class="body">
+    <b>${esc(title)}</b><p>${sub}</p><span class="chip" style="margin-top:6px;display:inline-block">${esc(tag)}</span></div>
+    <span class="stamp">${timeAgo(t)}</span></div>`;
+}
+function timeAgo(t){const s=(Date.now()-t)/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+
+/* ===================== INIT ===================== */
+renderHome();renderChecklist();renderWellQs();renderNomFeed();
+window.addEventListener('load',initSig);
+window.addEventListener('resize',()=>{/* keep sig sized */});
+</script>
+</body>
+</html>
