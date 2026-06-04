@@ -3,25 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SiteSafe — Pre-Start Safety App</title>
+<title>Victaulic Pre-Start Safety</title>
 <style>
   :root{
-    --navy:#0f2238; --navy2:#16314f; --steel:#1f3f63;
-    --orange:#ff7a18; --amber:#ffc107; --green:#19b562; --red:#e23b3b;
-    --bg:#f4f6f9; --card:#ffffff; --line:#e2e8f0; --ink:#1a2433; --muted:#64748b;
-    --shadow:0 2px 10px rgba(15,34,56,.08);
+    /* Victaulic brand palette */
+    --navy:#000000; --navy2:#141414; --steel:#262626;
+    --orange:#F58220; --amber:#E0A100; --green:#2e9e5b; --red:#cc2f2f;
+    --bg:#f2f2f2; --card:#ffffff; --line:#DCDCDC; --ink:#1a1a1a; --muted:#787878;
+    --shadow:0 2px 10px rgba(0,0,0,.08);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg);color:var(--ink);line-height:1.45;padding-bottom:78px}
+  body{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.45;padding-bottom:28px}
   /* ---------- Header ---------- */
   header{position:sticky;top:0;z-index:40;background:linear-gradient(135deg,var(--navy),var(--steel));
     color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;
     box-shadow:0 2px 14px rgba(0,0,0,.18);padding-top:max(12px,env(safe-area-inset-top))}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.3px;font-size:18px}
-  .logo .mark{width:30px;height:30px;border-radius:8px;background:var(--orange);
-    display:grid;place-items:center;font-size:17px;box-shadow:0 0 0 3px rgba(255,122,24,.25)}
+  .logo{display:flex;align-items:baseline;gap:7px;font-weight:700;letter-spacing:.2px;font-size:19px}
+  .logo .logo-accent{color:var(--orange);font-weight:700}
   .spacer{flex:1}
   .roletog{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
   .roletog button{border:0;background:transparent;color:#cdd9e8;font-weight:700;font-size:12px;
@@ -36,6 +36,8 @@
   .view.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   h1{font-size:20px;margin:2px 0 2px}
+  .homehead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:2px 0 14px;font-size:20px;font-weight:800}
+  .homehead #homeDate{font-weight:600;color:var(--muted);font-size:15px;white-space:nowrap}
   .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
     margin-bottom:14px;box-shadow:var(--shadow)}
@@ -51,14 +53,16 @@
   .tile span{color:var(--muted);font-size:12px}
   .tile .tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;color:#fff;
     background:var(--red);border-radius:999px;padding:2px 7px}
-  .i-orange{background:rgba(255,122,24,.13);color:var(--orange)}
+  .i-orange{background:rgba(245,130,32,.13);color:var(--orange)}
   .i-green{background:rgba(25,181,98,.14);color:var(--green)}
   .i-blue{background:rgba(31,63,99,.12);color:var(--steel)}
   .i-amber{background:rgba(255,193,7,.18);color:#b8860b}
   .i-red{background:rgba(226,59,59,.12);color:var(--red)}
   /* ---------- Buttons ---------- */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;
-    font-weight:700;font-size:15px;padding:14px 18px;border-radius:12px;width:100%;transition:filter .12s}
+    font-weight:700;font-size:15px;padding:14px 18px;border-radius:12px;width:100%;transition:filter .12s;
+    text-transform:uppercase;letter-spacing:.4px}
+  .seg button,.roletog button,.toggle button{text-transform:uppercase;letter-spacing:.3px}
   .btn:active{filter:brightness(.93)}
   .btn-primary{background:var(--orange);color:#fff}
   .btn-green{background:var(--green);color:#fff}
@@ -72,7 +76,7 @@
   input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;
     font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
   textarea{min-height:84px;resize:vertical}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,122,24,.15)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(245,130,32,.18)}
   /* ---------- Checklist ---------- */
   .check{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
   .check:last-child{border-bottom:0}
@@ -98,6 +102,8 @@
   .b-alert{background:#fff4ec;border:1px solid #ffd2b0;color:#9a4a00}
   .b-info{background:#eef4fb;border:1px solid #cfe0f4;color:#1f3f63}
   .b-ok{background:#eafaf1;border:1px solid #bdeccf;color:#0c6b3a}
+  .alertlist{margin:6px 0 0;padding-left:18px}
+  .alertlist li{margin:3px 0}
   /* ---------- list items ---------- */
   .li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
   .li:last-child{border-bottom:0}
@@ -123,6 +129,10 @@
   .stat .s{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;box-shadow:var(--shadow)}
   .stat .s b{font-size:22px;display:block}
   .stat .s span{font-size:11px;color:var(--muted)}
+  .stat .s.todo{background:#fff1f1;border-color:#f3c2c2}
+  .stat .s.todo b{color:var(--red);font-size:13px;line-height:1.25;display:block;margin-bottom:2px}
+  .stat .s.done{background:#eafaf1;border-color:#bdeccf}
+  .stat .s.done b{color:var(--green)}
   .seg{display:flex;background:#eef2f7;border-radius:10px;padding:3px;margin-bottom:14px}
   .seg button{flex:1;border:0;background:transparent;padding:9px;border-radius:8px;font-weight:700;font-size:12.5px;color:var(--muted);cursor:pointer}
   .seg button.active{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
@@ -134,14 +144,64 @@
   .projhead .ph-name{font-size:18px;font-weight:800;margin-top:2px;line-height:1.2}
   .projhead .ph-site{font-size:12.5px;color:#cdd9e8;margin-top:3px}
   .projhead .ph-details{font-size:12.5px;color:#dce6f2;margin-top:10px;line-height:1.45}
-  .projhead select{width:auto;max-width:42%;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:12px;padding:8px 10px;border-radius:10px}
+  .ph-director{font-size:12px;color:#cdd9e8;margin-top:9px;line-height:1.55}
+  .ph-director .lbl{color:#9fb3cc;font-weight:800;letter-spacing:.3px}
+  .ph-director a{color:#9fd0ff;text-decoration:none;font-weight:700}
   .projhead select option{color:#1a2433}
-  .ph-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-  .ph-row{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap}
-  .ph-emerg{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-weight:800;font-size:13px;padding:11px 15px;border-radius:11px;text-decoration:none}
-  .ph-geo{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);color:#fff;font-size:12px;font-weight:600;padding:11px 13px;border-radius:11px;cursor:pointer}
-  .ph-geo.on{background:rgba(25,181,98,.32)}
-  .ph-geo.off{background:rgba(226,59,59,.32)}
+  .ph-row{display:flex;gap:8px;margin-top:14px}
+  .ph-row > *{flex:1 1 0;min-width:0;height:42px;display:flex;align-items:center;justify-content:center;gap:5px;
+    font-size:12px;font-weight:700;border-radius:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px}
+  .projhead select{width:100%;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);
+    text-align:center;text-align-last:center;-webkit-appearance:none;appearance:none}
+  .ph-emerg{background:var(--red);color:#fff;font-weight:800;font-size:13px;text-decoration:none}
+  .ph-geo{background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+  .ph-geo.on{background:rgba(25,181,98,.34)}
+  .ph-geo.off{background:rgba(204,47,47,.4)}
+  /* weather chip in project box */
+  .ph-wx{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:2px;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:11px;padding:7px 10px;cursor:pointer;color:#fff;min-width:100px}
+  .ph-wx .ph-wxtop{display:flex;align-items:center;gap:5px;font-size:16px;font-weight:800;line-height:1}
+  .ph-wxmetrics{font-size:9.5px;font-weight:600;color:#cdd9e8;line-height:1.3;text-align:right;white-space:nowrap}
+  .projhead{position:relative}
+  .projhead .ph-label,.projhead .ph-name{padding-right:116px}
+  /* weather view */
+  .wxnow{text-align:center}
+  .wxtemp{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .wxdeg{font-size:46px;font-weight:800;line-height:1}
+  .wxcond{font-size:14px;color:var(--muted)}
+  .wxhilo{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .wxgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .wxm{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+  .wxk{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+  .wxv{font-size:18px;font-weight:800;margin-top:3px;display:flex;align-items:center;gap:7px}
+  /* reminders */
+  .remrow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .remrow p{margin:2px 0 0}
+  input[type=checkbox]{width:20px;height:20px;accent-color:var(--orange)}
+  /* muster map */
+  .mustermap{width:100%;border:1px solid var(--line);border-radius:12px;display:block;background:#eef1f4}
+  /* hamburger + drawer */
+  .hammenu{border:0;background:transparent;color:#fff;font-size:23px;cursor:pointer;padding:2px 10px 2px 0;line-height:1}
+  .drawer{position:fixed;top:0;left:0;bottom:0;width:266px;max-width:82%;background:#fff;z-index:80;transform:translateX(-100%);
+    transition:transform .25s ease;box-shadow:2px 0 18px rgba(0,0,0,.22);overflow-y:auto}
+  .drawer-head{background:var(--navy);color:#fff;font-weight:800;font-size:16px;letter-spacing:.5px;padding:18px;padding-top:max(18px,env(safe-area-inset-top))}
+  .drawer a{display:block;padding:14px 18px;color:var(--ink);font-size:14.5px;font-weight:600;cursor:pointer;border-bottom:1px solid var(--line);text-decoration:none}
+  .drawer a:active{background:#f2f2f2}
+  .drawer-sep{height:8px;background:#f2f2f2}
+  .drawer-scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:79;opacity:0;pointer-events:none;transition:opacity .25s}
+  body.menu-open .drawer{transform:translateX(0)}
+  body.menu-open .drawer-scrim{opacity:1;pointer-events:auto}
+  /* emergency broadcast */
+  .b-emerg{background:var(--red);border:1px solid #a52121;color:#fff;animation:pulse 1.5s infinite}
+  .b-emerg .btn-red{background:#fff;color:var(--red)}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(204,47,47,.5)}50%{box-shadow:0 0 0 9px rgba(204,47,47,0)}}
+  /* document rows */
+  .doc{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .doc:last-child{border-bottom:0}
+  .doc .di{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-size:18px;background:rgba(245,130,32,.13);flex:0 0 auto}
+  .doc .body{flex:1;min-width:0}
+  .doc .body b{font-size:14px;display:block}
+  .doc .body p{margin:2px 0 0;font-size:12px;color:var(--muted)}
   .req{color:var(--red)}
   .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
     padding:12px 18px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:60;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:90%}
@@ -151,7 +211,7 @@
   .smiley{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px 4px;text-align:center;cursor:pointer}
   .smiley .e{font-size:26px}
   .smiley small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
-  .smiley.sel{border-color:var(--orange);background:#fff4ec;box-shadow:0 0 0 3px rgba(255,122,24,.15)}
+  .smiley.sel{border-color:var(--orange);background:#fdf1e6;box-shadow:0 0 0 3px rgba(245,130,32,.18)}
   .signbox{border:2px dashed var(--line);border-radius:12px;background:#fafbfc;height:120px;width:100%;touch-action:none;display:block}
   .accordion h3{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
   .accordion .ac-body{display:none;margin-top:10px}
@@ -163,8 +223,9 @@
 <body>
 
 <header>
+  <button class="hammenu" onclick="toggleMenu()" aria-label="Menu">☰</button>
   <div>
-    <div class="logo"><span class="mark">⛑️</span> SiteSafe</div>
+    <div class="logo">Pre-Start <span class="logo-accent">Safety</span></div>
     <div class="jobbadge" id="jobBadge"><span class="dot" id="jobDot"></span><span id="jobText">Not signed on</span></div>
   </div>
   <div class="spacer"></div>
@@ -178,28 +239,32 @@
 
 <!-- ============== WORKER: HOME ============== -->
 <section class="view active" id="v-home">
+  <div class="homehead">
+    <span id="greeting">Good morning</span>
+    <span id="homeDate"></span>
+  </div>
   <div class="projhead">
-    <div class="ph-top">
-      <div>
-        <div class="ph-label">CURRENT PROJECT</div>
-        <div class="ph-name" id="phName">—</div>
-        <div class="ph-site" id="phSite"></div>
-      </div>
-      <select id="phSwitch" onchange="switchProject(this.value)" aria-label="Switch project"></select>
+    <div class="ph-wx" id="phWx" onclick="go('weather')">
+      <div class="ph-wxtop"><span id="phWxIcon">🌤️</span> <span id="phWxTemp">Weather</span></div>
+      <div class="ph-wxmetrics" id="phWxMetrics">tap to load</div>
     </div>
+    <div class="ph-label">CURRENT PROJECT</div>
+    <div class="ph-name" id="phName">—</div>
+    <div class="ph-site" id="phSite"></div>
     <div class="ph-details" id="phDetails"></div>
+    <div class="ph-director" id="phDirector"></div>
     <div class="ph-row">
-      <a class="ph-emerg" id="phEmerg" href="tel:111">📞 Emergency <span id="phEmergNum">111</span></a>
-      <div class="ph-geo off" id="phGeo" onclick="geoTap()">📍 Tap to enable location alerts</div>
+      <select id="phSwitch" onchange="switchProject(this.value)" aria-label="Switch project"></select>
+      <a class="ph-emerg" id="phEmerg" href="tel:111">📞 <span id="phEmergNum">111</span></a>
+      <div class="ph-geo off" id="phGeo" onclick="geoTap()">📍 Location</div>
     </div>
   </div>
+  <div id="broadcastBanner"></div>
   <div id="geoBanner"></div>
-  <h1 id="greeting">Good morning 👋</h1>
-  <p class="sub" id="homeDate"></p>
 
   <div class="banner b-alert" id="riskAlert">
     <span class="bi">⚠️</span>
-    <div><b>Site alert from management.</b> <span id="riskAlertText">Tap “Site Risks” to review today’s hazards before you start.</span></div>
+    <div><b>Site alert from management</b><div id="riskAlertText"></div></div>
   </div>
 
   <div class="stat">
@@ -216,7 +281,13 @@
     <div class="tile" onclick="go('nominate')"><div class="ic i-blue">🏅</div><b>Nominate a Mate</b><span>Recognise good safety</span></div>
     <div class="tile" onclick="go('induction')"><div class="ic" style="background:rgba(124,77,255,.12);color:#7c4dff">🎓</div><b>Site Induction</b><span id="indTileSub">Sit or renew induction</span></div>
     <div class="tile" onclick="go('equipment')"><div class="ic i-amber">🔌</div><b>Equipment Register</b><span>Test &amp; tag / electrical WoF</span></div>
-    <div class="tile" onclick="go('signoff')"><div class="ic i-navy" style="background:rgba(15,34,56,.1);color:var(--navy)">📋</div><b>Sign On / Off</b><span>Start &amp; end your shift</span></div>
+    <div class="tile" onclick="go('drawings')"><div class="ic i-blue">📐</div><b>Drawings</b><span>Project drawings</span></div>
+    <div class="tile" onclick="go('submittals')"><div class="ic i-amber">📚</div><b>Submittals</b><span>Manuals &amp; product docs</span></div>
+    <div class="tile" onclick="go('reminders')"><div class="ic i-green">⏰</div><b>Reminders</b><span>Breaks, water &amp; UV</span></div>
+    <div class="tile" onclick="go('muster')"><div class="ic i-red">🚨</div><b>Muster Point</b><span>Emergency assembly map</span></div>
+    <div class="tile" onclick="go('firstaid')"><div class="ic i-green">🩹</div><b>First Aid</b><span>First aiders &amp; guides</span></div>
+    <div class="tile" onclick="go('eap')"><div class="ic i-green">🤝</div><b>Mates’ Support</b><span>EAP — talk to someone</span></div>
+    <div class="tile" onclick="go('signoff')"><div class="ic i-navy" style="background:rgba(0,0,0,.08);color:var(--navy)">📋</div><b>Sign On / Off</b><span>Start &amp; end your shift</span></div>
   </div>
 
   <div class="card" id="ppeHomeCard" style="margin-top:14px">
@@ -249,6 +320,15 @@
 
   <div id="signOnForm">
     <div class="card">
+      <label>Signing on as <span class="req">*</span></label>
+      <div class="seg" id="soType" style="margin-bottom:6px">
+        <button class="active" data-v="worker" onclick="pickType(this)">Worker / Contractor</button>
+        <button data-v="visitor" onclick="pickType(this)">Visitor</button>
+      </div>
+      <div id="soHostWrap" class="hide">
+        <label>Who are you here to see? <span class="req">*</span></label>
+        <select id="soHost"></select>
+      </div>
       <label>Your name <span class="req">*</span></label>
       <input id="soName" placeholder="Full name">
       <label>Company / trade <span class="req">*</span></label>
@@ -436,6 +516,95 @@
   <div class="card"><div class="scroller"><table class="rtable" id="eqTable"></table></div></div>
 </section>
 
+<!-- ============== WORKER: DRAWINGS ============== -->
+<section class="view" id="v-drawings">
+  <h1>Project Drawings</h1>
+  <p class="sub" id="drwSub">Current drawings for this project</p>
+  <div class="card"><div id="drwList"></div></div>
+  <p class="sub" style="font-size:11.5px">Always work to the latest revision. Check with the site office if unsure.</p>
+</section>
+
+<!-- ============== WORKER: SUBMITTALS ============== -->
+<section class="view" id="v-submittals">
+  <h1>Submittals &amp; Manuals</h1>
+  <p class="sub">Manufacturer &amp; supplier documentation, installation manuals and datasheets.</p>
+  <div class="card"><div id="subList"></div></div>
+</section>
+
+<!-- ============== WORKER: FIRST AID ============== -->
+<section class="view" id="v-firstaid">
+  <h1>First Aid</h1>
+  <p class="sub">Site first aiders and basic first-aid guidance.</p>
+  <div class="banner b-alert"><span class="bi">🚨</span><div>In a medical emergency call <b>emergency services (111)</b> first, then a site first aider. These guides are general information, not a substitute for trained help.</div></div>
+  <div class="card"><h3>Site first aiders</h3><div id="faAiders"></div></div>
+  <h3 style="margin:18px 4px 8px">Quick guides</h3>
+  <div id="faGuides"></div>
+</section>
+
+<!-- ============== WORKER: EAP SUPPORT ============== -->
+<section class="view" id="v-eap">
+  <h1>Mates’ Support — EAP</h1>
+  <p class="sub">Free, confidential support for work or home stress — for you and your mates.</p>
+  <div class="card" id="eapCard"></div>
+  <div class="card">
+    <h3>It’s OK to reach out 💬</h3>
+    <p style="font-size:13.5px;line-height:1.55">Talking to someone helps — whether it’s pressure on the job, money, family, sleep, or just not feeling yourself. EAP counsellors are independent and confidential; your employer isn’t told who calls. Looking out for your mates matters too — if someone seems off, ask how they’re going.</p>
+  </div>
+  <div class="card">
+    <h3>Need to talk now?</h3>
+    <div id="eapCrisis"></div>
+  </div>
+</section>
+
+<!-- ============== WORKER: WEATHER ============== -->
+<section class="view" id="v-weather">
+  <h1>Weather &amp; Sun Safety</h1>
+  <p class="sub" id="wxLoc">Current conditions for your site</p>
+  <div id="wxBody"><div class="emptymsg">Loading…</div></div>
+  <button class="btn btn-primary" onclick="loadWeather()">Refresh forecast</button>
+  <p class="sub" style="font-size:11px;margin-top:10px">Forecast by Open-Meteo · uses your device or site location.</p>
+</section>
+
+<!-- ============== WORKER: REMINDERS ============== -->
+<section class="view" id="v-reminders">
+  <h1>Reminders</h1>
+  <p class="sub">Stay safe through the shift. Pop-ups show while the app is open.</p>
+  <div class="banner b-info" id="remPermBanner"><span class="bi">🔔</span><div>Tap “Turn on reminders” to allow notifications.</div></div>
+
+  <div class="card">
+    <div class="remrow"><div><b>Shift break reminders</b><p class="meta">Smoko, lunch &amp; afternoon</p></div>
+      <input type="checkbox" id="remBreaks" onchange="saveReminders()"></div>
+    <div id="breakTimes" style="display:flex;gap:8px;margin-top:6px">
+      <div style="flex:1"><label>Morning</label><input type="time" id="bt0" onchange="saveReminders()"></div>
+      <div style="flex:1"><label>Lunch</label><input type="time" id="bt1" onchange="saveReminders()"></div>
+      <div style="flex:1"><label>Afternoon</label><input type="time" id="bt2" onchange="saveReminders()"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="remrow"><div><b>Hydration reminders</b><p class="meta">Regular water breaks</p></div>
+      <input type="checkbox" id="remHydra" onchange="saveReminders()"></div>
+    <label>Remind me every</label>
+    <select id="remHydraMins" onchange="saveReminders()"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option></select>
+  </div>
+
+  <div class="card">
+    <div class="remrow"><div><b>High-UV reminders</b><p class="meta">Alert when UV is high — sunscreen, hat, shade</p></div>
+      <input type="checkbox" id="remUv" onchange="saveReminders()"></div>
+  </div>
+
+  <button class="btn btn-primary" onclick="enableReminders()">Turn on reminders</button>
+</section>
+
+<!-- ============== WORKER: MUSTER POINT ============== -->
+<section class="view" id="v-muster">
+  <h1>Emergency Muster Point</h1>
+  <p class="sub" id="musterSub">On the alarm, stop work, make safe and proceed to the assembly area.</p>
+  <div class="banner b-alert"><span class="bi">🚨</span><div>In an emergency call <b>emergency services / your site emergency line</b>, then proceed to the muster point and await the roll call.</div></div>
+  <div class="card"><div id="musterMapWrap"></div></div>
+  <div class="card"><h3>Assembly instructions</h3><div id="musterInfo"></div></div>
+</section>
+
 <!-- ============== MANAGEMENT CONSOLE ============== -->
 <section class="view" id="v-mgmt">
   <h1>Management Console</h1>
@@ -443,6 +612,9 @@
 
   <div class="seg scrollseg" id="mgmtTabs">
     <button data-tab="m-proj" onclick="mgmtTab(this)">Projects</button>
+    <button data-tab="m-contacts" onclick="mgmtTab(this)">Contacts</button>
+    <button data-tab="m-alert" onclick="mgmtTab(this)">Alerts</button>
+    <button data-tab="m-docs" onclick="mgmtTab(this)">Documents</button>
     <button class="active" data-tab="m-risks" onclick="mgmtTab(this)">Risks &amp; PPE</button>
     <button data-tab="m-equip" onclick="mgmtTab(this)">Equipment</button>
     <button data-tab="m-ind" onclick="mgmtTab(this)">Inductions</button>
@@ -455,8 +627,8 @@
   <div id="m-risks" class="mtab">
     <div class="card">
       <h3>Daily site alert</h3>
-      <p class="meta">This banner shows on every worker’s home screen.</p>
-      <textarea id="mgAlert" placeholder="e.g. Crane lift on east face 10am–2pm. Exclusion zone in force."></textarea>
+      <p class="meta">Shows on every worker’s home screen. Put each point on its own line — each becomes a bullet.</p>
+      <textarea id="mgAlert" placeholder="Crane lift east face 10am–2pm — exclusion zone&#10;Wet weather: slips on level 3&#10;Deliveries via Gate B until midday"></textarea>
       <div class="btnrow"><button class="btn btn-primary sm" onclick="publishAlert()">Publish alert</button></div>
     </div>
 
@@ -501,9 +673,34 @@
       <label>Site name / address</label><input id="mpSite">
       <label>Site details (hours, gate, key risks)</label><textarea id="mpDetails"></textarea>
       <label>Emergency contact number</label><input id="mpEmerg" placeholder="e.g. 111 or site emergency line">
+      <label>Project director — name</label><input id="mpDirName" placeholder="Full name">
+      <label>Project director — phone</label><input id="mpDirPhone" type="tel" placeholder="e.g. 021 555 0101">
+      <label>Project director — email</label><input id="mpDirEmail" type="email" placeholder="name@company.com">
       <label>Geofence radius (metres)</label><input id="mpRadius" type="number" placeholder="200">
       <div class="btnrow"><button class="btn btn-navy sm" onclick="mpSave()">Save project</button><button class="btn-ghost btn sm" onclick="setSiteHere(true)">📍 Set site GPS to my location</button></div>
       <p class="meta" id="mpGeoStat" style="margin-top:8px"></p>
+      <label>Emergency muster point — instructions</label><textarea id="mpMuster" placeholder="e.g. Assemble at the main car park, NE corner by the flagpole."></textarea>
+      <div class="btnrow"><button class="btn-ghost btn sm" onclick="setMusterHere()">📍 Set muster GPS to my location</button></div>
+      <p class="meta" id="mpMusterStat"></p>
+    </div>
+
+    <div class="card"><h3>Site first aiders</h3>
+      <p class="meta">Shown on the First Aid screen with a tap-to-call button.</p>
+      <div id="mgFaList" style="margin:8px 0"></div>
+      <label>Name</label><input id="faName" placeholder="e.g. K. Reweti">
+      <label>Role / location</label><input id="faRole" placeholder="e.g. Level 14 / Site office">
+      <label>Phone</label><input id="faPhone" type="tel" placeholder="e.g. 021 555 0190">
+      <button class="btn btn-navy sm" style="margin-top:10px" onclick="addFirstAider()">Add first aider</button>
+    </div>
+
+    <div class="card"><h3>Employee Assistance Program (EAP)</h3>
+      <p class="meta">Confidential wellbeing support shown to all staff on the Mates’ Support screen.</p>
+      <label>Provider name</label><input id="eapProvider" placeholder="e.g. Vitae EAP">
+      <label>Phone</label><input id="eapPhone" type="tel" placeholder="e.g. 0508 664 981">
+      <label>Text number (optional)</label><input id="eapText" type="tel" placeholder="e.g. 5626">
+      <label>Hours / tagline</label><input id="eapHours" placeholder="e.g. 24/7 · free &amp; confidential">
+      <label>Note (optional)</label><input id="eapNote" placeholder="e.g. Free sessions for you and your family">
+      <button class="btn btn-navy sm" style="margin-top:10px" onclick="saveEap()">Save EAP details</button>
     </div>
     <div class="card accordion" id="addProjCard">
       <h3 onclick="document.getElementById('addProjCard').classList.toggle('open')">➕ Add project <span>▾</span></h3>
@@ -512,6 +709,13 @@
         <label>Site name / address</label><input id="npSite">
         <button class="btn btn-navy" style="margin-top:12px" onclick="addProject()">Add Project</button>
       </div>
+    </div>
+    <div class="card"><h3>Visitor hosts</h3>
+      <p class="meta">Names shown to visitors at sign-in; the selected host is emailed automatically.</p>
+      <div id="mgHostList" style="margin:8px 0"></div>
+      <label>Host name</label><input id="nhName" placeholder="e.g. A. Singh — Project Manager">
+      <label>Host email</label><input id="nhEmail" type="email" placeholder="name@company.com">
+      <button class="btn btn-navy sm" style="margin-top:10px" onclick="addHost()">Add host</button>
     </div>
   </div>
 
@@ -541,6 +745,41 @@
     <div class="card"><h3>Induction roster</h3>
       <p class="meta">Personnel inducted on site and their expiry.</p>
       <div id="indRoster"></div>
+    </div>
+  </div>
+
+  <!-- Site contacts -->
+  <div id="m-contacts" class="mtab hide">
+    <div class="card"><h3>On site now</h3><p class="meta">Personnel currently signed on via the app.</p><div id="ctOnsite"></div></div>
+    <div class="card"><h3>Site directory</h3><p class="meta">Key contacts. A green “● On site” badge shows who’s currently signed on.</p><div id="ctDir"></div></div>
+  </div>
+
+  <!-- Broadcast / emergency alerts -->
+  <div id="m-alert" class="mtab hide">
+    <div class="card"><h3>Message all staff on site</h3>
+      <p class="meta">Shows on every worker’s home screen. Use the emergency alert only for evacuations or serious incidents.</p>
+      <textarea id="bcText" placeholder="Type a message — e.g. Concrete pour on level 3 moved to 1pm."></textarea>
+      <div class="btnrow"><button class="btn btn-navy sm" onclick="sendBroadcast('message')">📢 Send message</button>
+        <button class="btn btn-red sm" onclick="sendBroadcast('emergency')">🚨 Emergency alert</button></div>
+    </div>
+    <div class="card"><h3>Active broadcast</h3><div id="bcCurrent"></div></div>
+  </div>
+
+  <!-- Documents: drawings & submittals -->
+  <div id="m-docs" class="mtab hide">
+    <div class="card"><h3>Project drawings</h3>
+      <div id="mgDrwList" style="margin-bottom:8px"></div>
+      <label>Drawing name</label><input id="ndName" placeholder="e.g. Mechanical Layout — Level 14">
+      <label>Revision</label><input id="ndRev" placeholder="e.g. Rev C">
+      <label>Link (optional)</label><input id="ndUrl" type="url" placeholder="https://...">
+      <button class="btn btn-navy sm" style="margin-top:10px" onclick="addDrawing()">Add drawing</button>
+    </div>
+    <div class="card"><h3>Submittals &amp; manuals</h3>
+      <div id="mgSubList" style="margin-bottom:8px"></div>
+      <label>Document name</label><input id="nsName" placeholder="e.g. Style 177N Coupling — Installation Manual">
+      <label>Type</label><input id="nsType" placeholder="e.g. Installation manual / Datasheet / Submittal">
+      <label>Link (optional)</label><input id="nsUrl" type="url" placeholder="https://...">
+      <button class="btn btn-navy sm" style="margin-top:10px" onclick="addSubmittal()">Add document</button>
     </div>
   </div>
 
@@ -576,15 +815,27 @@
 </main>
 
 <!-- ============== BOTTOM NAV ============== -->
-<nav class="tabbar" id="workerNav">
-  <button class="active" data-v="home" onclick="go('home')"><span class="ni">🏠</span>Home</button>
-  <button data-v="prestart" onclick="go('prestart')"><span class="ni">✅</span>Pre-Start</button>
-  <button data-v="risks" onclick="go('risks')"><span class="ni">⚠️</span>Risks</button>
-  <div class="navwrap"><button data-v="report" onclick="go('report')" style="width:100%"><span class="ni">📣</span>Report</button></div>
-  <button data-v="signoff" onclick="go('signoff')"><span class="ni">📋</span>Sign</button>
-</nav>
-<nav class="tabbar hide" id="mgmtNav">
-  <button class="active" onclick="go('mgmt')"><span class="ni">🛠️</span>Console</button>
+<div class="drawer-scrim" id="drawerScrim" onclick="toggleMenu(false)"></div>
+<nav class="drawer" id="drawer">
+  <div class="drawer-head">Menu</div>
+  <a onclick="navTo('home')">🏠 Home</a>
+  <a onclick="navTo('prestart')">✅ Pre-Start Checklist</a>
+  <a onclick="navTo('wellness')">💚 Wellness Check</a>
+  <a onclick="navTo('risks')">⚠️ Site Risks &amp; PPE</a>
+  <a onclick="navTo('equipment')">🔌 Equipment Register</a>
+  <a onclick="navTo('induction')">🎓 Site Induction</a>
+  <a onclick="navTo('drawings')">📐 Drawings</a>
+  <a onclick="navTo('submittals')">📚 Submittals &amp; Manuals</a>
+  <a onclick="navTo('weather')">🌤️ Weather</a>
+  <a onclick="navTo('reminders')">⏰ Reminders</a>
+  <a onclick="navTo('muster')">🚨 Muster Point</a>
+  <a onclick="navTo('firstaid')">🩹 First Aid</a>
+  <a onclick="navTo('eap')">🤝 Mates’ Support (EAP)</a>
+  <a onclick="navTo('report')">📣 Report a Hazard</a>
+  <a onclick="navTo('nominate')">🏅 Nominate a Mate</a>
+  <a onclick="navTo('signoff')">📋 Sign On / Off</a>
+  <div class="drawer-sep"></div>
+  <a onclick="navTo('mgmt')">🛠️ Management Console</a>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -593,7 +844,7 @@
 /* ===================== STATE ===================== */
 const LS='sitesafe_v1';
 const seed={
-  alert:"Crane lift on the east face 10:00–14:00 — exclusion zone in force. Wet weather: watch for slips on level 3.",
+  alert:"Crane lift on the east face 10:00–14:00 — exclusion zone in force\nWet weather: watch for slips on level 3\nDeliveries via Gate B only until midday",
   alertTime:Date.now(),
   hazards:[
     {h:"Overhead crane lift (east face)",risk:"Workers below load path",like:"Likely",cons:"Severe",ctrl:"ELIMINATE work under load. ISOLATE: barricaded exclusion zone + spotter. Tag lines on all loads. Hard hat & hi-vis mandatory."},
@@ -626,17 +877,44 @@ const seed={
     {name:"S. Patel",company:"BuildCo",t:Date.now()-30*864e5,valid:365}
   ],
   projects:[
-    {name:"Riverside Tower — Level 14 fit-out",site:"12 Riverside Dr, Northbank",details:"High-rise commercial fit-out. Site hours 6:30am–4:30pm. Sign in at Gate B site office. Crane lifts on the east face daily.",emergency:"111",lat:null,lng:null,radius:200},
-    {name:"Harbour Industrial Shed B",site:"8 Dock Rd, Port Estate",details:"Industrial warehouse. Forklift & truck traffic — hi-vis mandatory beyond the office. Hearing protection in the press area.",emergency:"111",lat:null,lng:null,radius:250},
-    {name:"Metro Rail — Platform Works",site:"Central Station, Platform 4",details:"Live rail corridor. Rail safety induction & permit required. Never cross tracks except at marked points.",emergency:"111",lat:null,lng:null,radius:150},
-    {name:"Northgate Warehouse Extension",site:"45 Industry Way, Northgate",details:"Tilt-up construction. Daily crane lifts with exclusion zones. Silica controls in place for concrete cutting.",emergency:"111",lat:null,lng:null,radius:200}
+    {name:"Riverside Tower — Level 14 fit-out",site:"12 Riverside Dr, Northbank",details:"High-rise commercial fit-out. Site hours 6:30am–4:30pm. Sign in at Gate B site office. Crane lifts on the east face daily.",emergency:"111",director:{name:"R. Mahon",phone:"021 555 0101",email:"r.mahon@buildco.example"},lat:null,lng:null,radius:200},
+    {name:"Harbour Industrial Shed B",site:"8 Dock Rd, Port Estate",details:"Industrial warehouse. Forklift & truck traffic — hi-vis mandatory beyond the office. Hearing protection in the press area.",emergency:"111",director:{name:"T. Whitu",phone:"021 555 0142",email:"t.whitu@buildco.example"},lat:null,lng:null,radius:250},
+    {name:"Metro Rail — Platform Works",site:"Central Station, Platform 4",details:"Live rail corridor. Rail safety induction & permit required. Never cross tracks except at marked points.",emergency:"111",director:{name:"P. Osei",phone:"021 555 0188",email:"p.osei@buildco.example"},lat:null,lng:null,radius:150},
+    {name:"Northgate Warehouse Extension",site:"45 Industry Way, Northgate",details:"Tilt-up construction. Daily crane lifts with exclusion zones. Silica controls in place for concrete cutting.",emergency:"111",director:{name:"L. Berg",phone:"021 555 0203",email:"l.berg@buildco.example"},lat:null,lng:null,radius:200}
   ],
-  currentProject:0
+  currentProject:0,
+  hosts:[
+    {name:"Site Office (reception)",email:"siteoffice@example.com"},
+    {name:"S. Patel — Site Manager",email:"s.patel@example.com"},
+    {name:"J. Wells — Foreman",email:"j.wells@example.com"},
+    {name:"R. Mahon — Project Director",email:"r.mahon@buildco.example"}
+  ],
+  reminders:{breaks:true,breakTimes:["10:00","12:30","15:00"],hydration:true,hydrationMins:60,uv:true},
+  drawings:[
+    {name:"Mechanical Services Layout — Level 14",rev:"Rev C",url:""},
+    {name:"Fire Services Riser Diagram",rev:"Rev B",url:""},
+    {name:"Pipework GA — East Plantroom",rev:"Rev A",url:""}
+  ],
+  submittals:[
+    {name:"Style 177N QuickVic Coupling — Installation Manual",type:"Installation manual",url:""},
+    {name:"Series 705 Butterfly Valve — Submittal Sheet",type:"Submittal",url:""},
+    {name:"FireLock Rigid Coupling — Datasheet",type:"Datasheet",url:""}
+  ],
+  firstAiders:[
+    {name:"K. Reweti",role:"Level 14 / Main contractor",phone:"021 555 0190"},
+    {name:"S. Patel",role:"Site office",phone:"021 555 0101"}
+  ],
+  eap:{provider:"Employee Assistance Program",phone:"",text:"",hours:"24/7 · free & confidential · for you and your whānau",note:"Independent counselling paid by your employer. Your employer is never told who calls or what is discussed."},
+  onsite:[
+    {name:"M. Tran",company:"Apex Electrical",visitor:false,t:Date.now()-3600e3},
+    {name:"Dan R.",company:"BuildCo",visitor:false,t:Date.now()-5400e3}
+  ],
+  broadcast:null
 };
 let state=load();
 function load(){try{const s=JSON.parse(localStorage.getItem(LS));if(!s||!s.hazards)return structuredClone(seed);
-  ['ppe','equipment','inductions','projects'].forEach(k=>{if(!s[k])s[k]=structuredClone(seed[k]);});
-  if(s.currentProject==null)s.currentProject=0;return s;}catch(e){return structuredClone(seed)}}
+  ['ppe','equipment','inductions','projects','hosts','reminders','drawings','submittals','firstAiders','eap','onsite'].forEach(k=>{if(!s[k])s[k]=structuredClone(seed[k]);});
+  if(s.currentProject==null)s.currentProject=0;if(s.broadcast===undefined)s.broadcast=null;return s;}catch(e){return structuredClone(seed)}}
 function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
 
 /* session (not persisted long-term) */
@@ -648,35 +926,53 @@ function setRole(r){
   role=r;
   document.getElementById('roleWorker').classList.toggle('active',r==='worker');
   document.getElementById('roleMgmt').classList.toggle('active',r==='mgmt');
-  document.getElementById('workerNav').classList.toggle('hide',r!=='worker');
-  document.getElementById('mgmtNav').classList.toggle('hide',r!=='mgmt');
   if(r==='mgmt'){go('mgmt');renderMgmt();}else{go('home');}
 }
 function go(v){
   document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
-  const map={home:'v-home',prestart:'v-prestart',risks:'v-risks',wellness:'v-wellness',report:'v-report',nominate:'v-nominate',signoff:'v-signoff',induction:'v-induction',equipment:'v-equipment',mgmt:'v-mgmt'};
+  const map={home:'v-home',prestart:'v-prestart',risks:'v-risks',wellness:'v-wellness',report:'v-report',nominate:'v-nominate',signoff:'v-signoff',induction:'v-induction',equipment:'v-equipment',drawings:'v-drawings',submittals:'v-submittals',weather:'v-weather',reminders:'v-reminders',muster:'v-muster',firstaid:'v-firstaid',eap:'v-eap',mgmt:'v-mgmt'};
   document.getElementById(map[v]).classList.add('active');
   document.querySelectorAll('#workerNav button').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
   if(v==='risks')renderRisks();
   if(v==='mgmt')renderMgmt();
-  if(v==='signoff')setTimeout(initSig,0);
+  if(v==='signoff'){setTimeout(initSig,0);renderHosts();}
   if(v==='equipment')renderEquipment();
   if(v==='induction')renderInduction();
+  if(v==='weather')renderWeather();
+  if(v==='reminders')renderReminders();
+  if(v==='muster')renderMuster();
+  if(v==='drawings')renderDrawings();
+  if(v==='submittals')renderSubmittals();
+  if(v==='firstaid')renderFirstAid();
+  if(v==='eap')renderEap();
   window.scrollTo(0,0);
 }
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
 
 /* ===================== HOME ===================== */
+function alertBullets(text){
+  if(!text)return '';
+  let parts=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  if(parts.length<2){parts=text.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);}
+  if(parts.length<2)return esc(text);
+  return '<ul class="alertlist">'+parts.map(p=>`<li>${esc(p.replace(/[.;]\s*$/,''))}</li>`).join('')+'</ul>';
+}
+function statBox(id,done,okText){
+  const b=document.getElementById(id);if(!b)return;
+  b.textContent=done?okText:'AWAITING COMPLETION';
+  b.parentElement.classList.toggle('done',!!done);
+  b.parentElement.classList.toggle('todo',!done);
+}
 function renderHome(){
   const hr=new Date().getHours();
   const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
-  document.getElementById('greeting').textContent=greet+' 👋';
-  document.getElementById('homeDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
-  renderProjectHead();checkGeo();
-  document.getElementById('riskAlertText').textContent=state.alert||"No active alerts. Review site risks before you start.";
-  document.getElementById('stCheck').textContent=session.prestartDone?'✓':'—';
-  document.getElementById('stWell').textContent=session.wellnessDone?'✓':'—';
-  document.getElementById('stSign').textContent=session.signedOn?'On':'—';
+  document.getElementById('greeting').textContent=greet;
+  document.getElementById('homeDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+  renderProjectHead();checkGeo();renderBroadcast();maybeAutoWx();
+  document.getElementById('riskAlertText').innerHTML=alertBullets(state.alert)||esc("No active alerts. Review site risks before you start.");
+  statBox('stCheck',session.prestartDone,'✓');
+  statBox('stWell',session.wellnessDone,'✓');
+  statBox('stSign',session.signedOn,'On');
   const iv=session.inductedUntil&&session.inductedUntil>Date.now();
   const its=document.getElementById('indTileSub');if(its)its.textContent=iv?'Current ✓ — tap to view':'Sit or renew induction';
   renderPPE();
@@ -750,17 +1046,23 @@ function signOn(){
   const comp=document.getElementById('soCompany').value.trim();
   const job=document.getElementById('soJob').value;
   if(!name||!comp){toast('Please enter your name and company');return;}
-  if(!session.prestartDone){toast('Complete your pre-start checklist first');go('prestart');return;}
+  if(soType==='worker'&&!session.prestartDone){toast('Complete your pre-start checklist first');go('prestart');return;}
+  if(soType==='worker'&&!session.wellnessDone){toast('Complete your wellness check first');go('wellness');return;}
+  let host=null;
+  if(soType==='visitor'){const hi=document.getElementById('soHost').value;host=state.hosts[parseInt(hi)];if(!host){toast('Select who you are here to see');return;}}
   if(sigEmpty){toast('Please add your signature');return;}
-  session.signedOn=true;session.name=name;session.company=comp;session.job=job;session.signOnTime=Date.now();
+  session.signedOn=true;session.visitor=(soType==='visitor');session.name=name;session.company=comp;session.job=job;session.signOnTime=Date.now();
   const pi=state.projects.findIndex(p=>p.name===job);if(pi>=0){state.currentProject=pi;save();}
+  state.onsite=(state.onsite||[]).filter(o=>(o.name||'').toLowerCase()!==name.toLowerCase());
+  state.onsite.unshift({name,company:comp,visitor:soType==='visitor',t:Date.now()});save();
   document.getElementById('signOnForm').classList.add('hide');
   document.getElementById('signedOnPanel').classList.remove('hide');
   document.getElementById('signedOnMeta').textContent=`${name} · ${comp} · ${job} · ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
   renderSignoffChecks();
   const dot=document.getElementById('jobDot');dot.classList.add('on');
   document.getElementById('jobText').textContent=job.split('—')[0].trim()+' · On site';
-  renderHome();toast('Signed on ✅ Have a safe shift');
+  if(host)notifyHost(host,name,comp,job);
+  renderHome();toast(host?('Signed on ✅ '+shortName(host.name)+' has been emailed'):'Signed on ✅ Have a safe shift');
 }
 const offItems=["Work area left clean, safe & tidy","Tools & equipment secured / removed","Isolations & barricades left as required","No hazards left for next crew"];
 function renderSignoffChecks(){
@@ -779,7 +1081,7 @@ function signOff(){
   const checks=checklistItems.map((it,i)=>`- ${it[0]}: ${(session.checks[i]||'—').toUpperCase()}`).join('\n');
   const notes=document.getElementById('psNotes').value.trim();
   const body=
-`SITESAFE — DAILY SIGN-OFF SUMMARY
+`VICTAULIC PRE-START — DAILY SIGN-OFF SUMMARY
 =================================
 Worker:   ${session.name}
 Company:  ${session.company}
@@ -795,10 +1097,11 @@ WELLNESS CHECK: ${session.wellnessDone?'Completed':'Not completed'}
 END-OF-SHIFT: Area confirmed left safe & tidy.
 
 Signed on with digital signature on device.
--- Sent from SiteSafe`;
+-- Sent from the Victaulic Pre-Start Safety app`;
   const subject=encodeURIComponent(`Sign-off — ${session.name} — ${session.job}`);
   window.location.href=`mailto:management@example.com?subject=${subject}&body=${encodeURIComponent(body)}`;
   session.signedOn=false;
+  if(session.name)state.onsite=(state.onsite||[]).filter(o=>(o.name||'').toLowerCase()!==session.name.toLowerCase());save();
   document.getElementById('jobDot').classList.remove('on');
   document.getElementById('jobText').textContent='Signed off';
   document.getElementById('signOnForm').classList.remove('hide');
@@ -819,7 +1122,7 @@ function ratePill(like,cons){
 }
 function renderRisks(){
   document.getElementById('risksUpdated').textContent='Published by site management · updated '+timeAgo(state.alertTime);
-  document.getElementById('riskSummary').textContent=state.alert||'Review all hazards and controls before commencing work.';
+  document.getElementById('riskSummary').innerHTML=alertBullets(state.alert)||esc('Review all hazards and controls before commencing work.');
   const t=document.getElementById('riskTable');
   t.innerHTML='<tr><th>Hazard</th><th>Risk</th><th>Rating</th><th>Isolation / Minimisation Controls</th></tr>';
   state.hazards.forEach(h=>{
@@ -931,7 +1234,7 @@ function renderMgmt(){
   // noms
   const mn=document.getElementById('mgNomFeed');
   mn.innerHTML=state.nominations.map(n=>liItem(n.who,`“${esc(n.what)}”`,n.cat+' · by '+esc(n.by),n.t,'🏅',avatarColor(n.who))).join('')||'<div class="emptymsg">No nominations yet.</div>';
-  renderMgEquip();renderIndRoster();renderPPE();renderMgProjects();
+  renderMgEquip();renderIndRoster();renderPPE();renderMgProjects();renderHostsMg();renderMgBroadcast();renderMgDocs();renderMgFirstAiders();renderMgEap();renderMgContacts();
 }
 function publishAlert(){state.alert=document.getElementById('mgAlert').value.trim();state.alertTime=Date.now();save();renderHome();toast('Alert published to all workers 📢');}
 function addHazard(){
@@ -960,6 +1263,11 @@ function renderProjectHead(){
   const p=activeProj();if(!p)return;
   setTxt('phName',p.name);setTxt('phSite',p.site?'📍 '+p.site:'');
   setTxt('phDetails',p.details||'');
+  const dir=p.director||{};let dh='';
+  if(dir.name){dh=`<span class="lbl">PROJECT DIRECTOR:</span> ${esc(dir.name)}`;
+    if(dir.phone)dh+=` · <a href="tel:${dir.phone.replace(/[^0-9+]/g,'')}">📞 ${esc(dir.phone)}</a>`;
+    if(dir.email)dh+=` · <a href="mailto:${esc(dir.email)}">✉️ ${esc(dir.email)}</a>`;}
+  const dd=document.getElementById('phDirector');if(dd)dd.innerHTML=dh;
   const num=(p.emergency||'111');
   const a=document.getElementById('phEmerg');
   if(a){a.href='tel:'+num.replace(/[^0-9+]/g,'');const ns=document.getElementById('phEmergNum');if(ns)ns.textContent=num;}
@@ -975,21 +1283,21 @@ function geoTap(){
 function enableGeo(){
   if(!navigator.geolocation){toast('Location not supported on this device');return;}
   if(geoWatch!==null)return;
-  const g=document.getElementById('phGeo');if(g)g.textContent='📍 Requesting location…';
+  const g=document.getElementById('phGeo');if(g)g.textContent='📍 Locating…';
   geoWatch=navigator.geolocation.watchPosition(onGeo,onGeoErr,{enableHighAccuracy:true,maximumAge:15000,timeout:20000});
 }
-function onGeoErr(){const g=document.getElementById('phGeo');if(g){g.className='ph-geo off';g.textContent='📍 Location blocked — allow it in your browser settings';}}
+function onGeoErr(){const g=document.getElementById('phGeo');if(g){g.className='ph-geo off';g.textContent='📍 Blocked';}}
 function onGeo(pos){lastPos={lat:pos.coords.latitude,lng:pos.coords.longitude};checkGeo();}
 function distM(a,b,c,d){const R=6371000,t=x=>x*Math.PI/180,dLat=t(c-a),dLng=t(d-b);const s=Math.sin(dLat/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
 function checkGeo(){
   const g=document.getElementById('phGeo'),banner=document.getElementById('geoBanner');
   if(!g||!lastPos)return;
   const p=activeProj();
-  if(!p.lat){g.className='ph-geo on';g.textContent='📍 Location on · tap to set this site’s GPS';if(banner)banner.innerHTML='';return;}
+  if(!p.lat){g.className='ph-geo on';g.textContent='📍 Set GPS';if(banner)banner.innerHTML='';return;}
   const d=Math.round(distM(lastPos.lat,lastPos.lng,p.lat,p.lng));
   const inside=d<=(p.radius||200);
   g.className='ph-geo '+(inside?'on':'off');
-  g.textContent=inside?`📍 On site · ${d}m from centre`:`📍 Off site · ${d}m away`;
+  g.textContent=inside?`📍 On site ${d}m`:`📍 Off site ${d}m`;
   let html='';
   if(!inside&&session.signedOn){html=`<div class="banner b-alert"><span class="bi">🚶</span><div><b>You've left ${esc(shortName(p.name))}.</b> You're still signed on here — sign off, or switch project if you've moved sites.</div></div>`;}
   let near=null;state.projects.forEach((pr,i)=>{if(i!==(state.currentProject||0)&&pr.lat){if(distM(lastPos.lat,lastPos.lng,pr.lat,pr.lng)<=(pr.radius||200))near={pr,i};}});
@@ -1014,8 +1322,15 @@ function mpLoad(){
   document.getElementById('mpSite').value=p.site||'';
   document.getElementById('mpDetails').value=p.details||'';
   document.getElementById('mpEmerg').value=p.emergency||'111';
+  const dir=p.director||{};
+  document.getElementById('mpDirName').value=dir.name||'';
+  document.getElementById('mpDirPhone').value=dir.phone||'';
+  document.getElementById('mpDirEmail').value=dir.email||'';
   document.getElementById('mpRadius').value=p.radius||200;
   document.getElementById('mpGeoStat').textContent=p.lat?('Site GPS set: '+p.lat.toFixed(5)+', '+p.lng.toFixed(5)):'Site GPS not set — open Home, enable location on site, then tap “Set site GPS”.';
+  const mu=p.muster||{};
+  const mm=document.getElementById('mpMuster');if(mm)mm.value=mu.info||'';
+  const msx=document.getElementById('mpMusterStat');if(msx)msx.textContent=mu.lat?('Muster GPS set: '+mu.lat.toFixed(5)+', '+mu.lng.toFixed(5)):'Muster GPS not set (the map will use the site GPS or a schematic).';
 }
 function mpSave(){
   const ms=document.getElementById('mpSel');const i=parseInt(ms.value);const p=state.projects[i];
@@ -1023,7 +1338,9 @@ function mpSave(){
   p.site=document.getElementById('mpSite').value.trim();
   p.details=document.getElementById('mpDetails').value.trim();
   p.emergency=document.getElementById('mpEmerg').value.trim()||'111';
+  p.director={name:document.getElementById('mpDirName').value.trim(),phone:document.getElementById('mpDirPhone').value.trim(),email:document.getElementById('mpDirEmail').value.trim()};
   p.radius=parseInt(document.getElementById('mpRadius').value)||200;
+  p.muster=p.muster||{};p.muster.info=document.getElementById('mpMuster').value.trim();
   save();renderProjectHead();renderMgProjects();toast('Project saved ✅');
 }
 function addProject(){
@@ -1039,6 +1356,290 @@ function renderMgProjects(){
   ms.innerHTML=state.projects.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join('');
   ms.value=cur<state.projects.length?cur:'0';mpLoad();
 }
+
+/* ===================== NAV / MENU ===================== */
+function toggleMenu(force){const open=(force===undefined)?!document.body.classList.contains('menu-open'):!!force;document.body.classList.toggle('menu-open',open);}
+function navTo(v){toggleMenu(false);
+  if(v==='mgmt'){setRole('mgmt');return;}
+  if(role==='mgmt'){role='worker';document.getElementById('roleWorker').classList.add('active');document.getElementById('roleMgmt').classList.remove('active');}
+  go(v);
+}
+
+/* ===================== WEATHER ===================== */
+let lastWx=null;
+function wxCode(c){const m={0:['☀️','Clear'],1:['🌤️','Mainly clear'],2:['⛅','Partly cloudy'],3:['☁️','Overcast'],45:['🌫️','Fog'],48:['🌫️','Rime fog'],51:['🌦️','Light drizzle'],53:['🌦️','Drizzle'],55:['🌧️','Heavy drizzle'],61:['🌦️','Light rain'],63:['🌧️','Rain'],65:['🌧️','Heavy rain'],66:['🌧️','Freezing rain'],67:['🌧️','Freezing rain'],71:['🌨️','Light snow'],73:['🌨️','Snow'],75:['❄️','Heavy snow'],77:['🌨️','Snow grains'],80:['🌦️','Showers'],81:['🌧️','Showers'],82:['⛈️','Heavy showers'],85:['🌨️','Snow showers'],86:['❄️','Snow showers'],95:['⛈️','Thunderstorm'],96:['⛈️','Storm, hail'],99:['⛈️','Storm, hail']};return m[c]||['🌡️','—'];}
+function uvRating(uv){uv=Math.round(uv);if(uv<3)return['LOW','p-low'];if(uv<6)return['MODERATE','p-med'];if(uv<8)return['HIGH','p-high'];if(uv<11)return['VERY HIGH','p-high'];return['EXTREME','p-crit'];}
+function hhmm(iso){return (iso||'').slice(11,16)||'—';}
+function updatePhWx(){
+  const t=document.getElementById('phWxTemp'),ic=document.getElementById('phWxIcon'),mx=document.getElementById('phWxMetrics');
+  if(!t)return;
+  if(lastWx&&lastWx.current){
+    const c=lastWx.current,dl=lastWx.daily||{};
+    const[e]=wxCode(c.weather_code);
+    if(ic)ic.textContent=e;
+    t.textContent=Math.round(c.temperature_2m)+'°';
+    const uv=(dl.uv_index_max&&Math.round(dl.uv_index_max[0]))||0;
+    const precip=(dl.precipitation_probability_max!=null&&dl.precipitation_probability_max[0]!=null)?dl.precipitation_probability_max[0]:0;
+    if(mx)mx.innerHTML=`💨 ${Math.round(c.wind_speed_10m)}km/h · ☀️UV ${uv} · 🌧 ${precip}%`;
+  }
+}
+function maybeAutoWx(){if(lastWx){updatePhWx();return;}
+  if(lastPos){fetchWx(lastPos.lat,lastPos.lng,'your location');return;}
+  const p=activeProj();if(p&&p.lat)fetchWx(p.lat,p.lng,shortName(p.name));}
+function loadWeather(){
+  if(lastPos){fetchWx(lastPos.lat,lastPos.lng,'your location');return;}
+  const p=activeProj();if(p&&p.lat){fetchWx(p.lat,p.lng,shortName(p.name));return;}
+  const b=document.getElementById('wxBody');if(b)b.innerHTML='<div class="emptymsg">Getting your location…</div>';
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(
+    pos=>{lastPos={lat:pos.coords.latitude,lng:pos.coords.longitude};fetchWx(lastPos.lat,lastPos.lng,'your location');},
+    ()=>{if(b)b.innerHTML='<div class="emptymsg">Couldn’t get your location. Enable location on the Home screen, or set the site GPS in the project box.</div>';},{timeout:15000});
+  }else if(b){b.innerHTML='<div class="emptymsg">Location isn’t available on this device.</div>';}
+}
+function fetchWx(lat,lng,label){
+  const loc=document.getElementById('wxLoc');if(loc)loc.textContent='Forecast for '+label;
+  const b=document.getElementById('wxBody');if(b&&!lastWx)b.innerHTML='<div class="emptymsg">Loading forecast…</div>';
+  const u='https://api.open-meteo.com/v1/forecast?latitude='+(+lat).toFixed(4)+'&longitude='+(+lng).toFixed(4)+'&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max&timezone=auto&forecast_days=1';
+  fetch(u).then(r=>r.json()).then(d=>{lastWx=d;renderWx(d);updatePhWx();checkUvReminder(d);}).catch(()=>{if(b)b.innerHTML='<div class="emptymsg">Couldn’t load the forecast. Check your connection and try again.</div>';});
+}
+function renderWeather(){if(lastWx)renderWx(lastWx);else loadWeather();}
+function renderWx(d){
+  const b=document.getElementById('wxBody');if(!b)return;
+  const c=d.current||{},dl=d.daily||{};
+  const[ce,ct]=wxCode(c.weather_code);
+  const uv=(dl.uv_index_max&&dl.uv_index_max[0])||0;const[ut,uc]=uvRating(uv);
+  const rain=(dl.precipitation_probability_max&&dl.precipitation_probability_max[0]);
+  const hi=dl.temperature_2m_max&&Math.round(dl.temperature_2m_max[0]);
+  const lo=dl.temperature_2m_min&&Math.round(dl.temperature_2m_min[0]);
+  b.innerHTML=
+   `<div class="card wxnow"><div class="wxtemp"><span class="wxdeg">${Math.round(c.temperature_2m)}°</span><span class="wxcond">${ce} ${ct}</span></div>
+     <div class="wxhilo">High ${hi}° · Low ${lo}° · Feels ${Math.round(c.apparent_temperature)}°</div></div>
+    <div class="wxgrid">
+     <div class="wxm"><div class="wxk">UV index</div><div class="wxv">${uv.toFixed(0)} <span class="pill ${uc}">${ut}</span></div></div>
+     <div class="wxm"><div class="wxk">Wind</div><div class="wxv">💨 ${Math.round(c.wind_speed_10m)} km/h</div></div>
+     <div class="wxm"><div class="wxk">Rain chance</div><div class="wxv">🌧️ ${rain==null?'—':rain+'%'}</div></div>
+     <div class="wxm"><div class="wxk">Precip now</div><div class="wxv">${(c.precipitation||0).toFixed(1)} mm</div></div>
+     <div class="wxm"><div class="wxk">Sunrise</div><div class="wxv">🌅 ${hhmm(dl.sunrise&&dl.sunrise[0])}</div></div>
+     <div class="wxm"><div class="wxk">Sunset</div><div class="wxv">🌇 ${hhmm(dl.sunset&&dl.sunset[0])}</div></div>
+    </div>
+    ${uv>=6?`<div class="banner b-alert"><span class="bi">🧴</span><div><b>High UV (${ut.toLowerCase()}).</b> Sunscreen, hat, long sleeves and shade where possible. Reapply every 2 hours.</div></div>`:''}`;
+}
+
+/* ===================== REMINDERS ===================== */
+let remTimers=[];
+function renderReminders(){
+  const r=state.reminders;
+  document.getElementById('remBreaks').checked=r.breaks;
+  document.getElementById('remHydra').checked=r.hydration;
+  document.getElementById('remUv').checked=r.uv;
+  document.getElementById('remHydraMins').value=String(r.hydrationMins);
+  document.getElementById('bt0').value=r.breakTimes[0];
+  document.getElementById('bt1').value=r.breakTimes[1];
+  document.getElementById('bt2').value=r.breakTimes[2];
+  updateRemPerm();
+}
+function updateRemPerm(){
+  const el=document.getElementById('remPermBanner');if(!el)return;
+  const p=('Notification' in window)?Notification.permission:'unsupported';
+  if(p==='granted'){el.className='banner b-ok';el.innerHTML='<span class="bi">🔔</span><div>Notifications are on. Reminders pop up while the app is open.</div>';}
+  else if(p==='unsupported'){el.className='banner b-info';el.innerHTML='<span class="bi">ℹ️</span><div>This device shows reminders as in-app pop-ups while the app is open.</div>';}
+  else{el.className='banner b-info';el.innerHTML='<span class="bi">🔔</span><div>Tap “Turn on reminders” to allow notifications. Add the app to your home screen for best results.</div>';}
+}
+function saveReminders(){
+  const r=state.reminders;
+  r.breaks=document.getElementById('remBreaks').checked;
+  r.hydration=document.getElementById('remHydra').checked;
+  r.uv=document.getElementById('remUv').checked;
+  r.hydrationMins=parseInt(document.getElementById('remHydraMins').value);
+  r.breakTimes=[document.getElementById('bt0').value||'10:00',document.getElementById('bt1').value||'12:30',document.getElementById('bt2').value||'15:00'];
+  save();scheduleReminders();
+}
+function enableReminders(){
+  if('Notification' in window && Notification.permission!=='granted'){Notification.requestPermission().then(()=>{updateRemPerm();scheduleReminders();toast('Reminders turned on 🔔');});}
+  else{scheduleReminders();updateRemPerm();toast('Reminders turned on 🔔');}
+}
+function notify(title,body){
+  if('Notification' in window && Notification.permission==='granted'){try{new Notification(title,{body});}catch(e){}}
+  toast('⏰ '+title);
+}
+function msUntil(s){const a=(s||'0:0').split(':');const t=new Date();t.setHours(+a[0],+a[1],0,0);return t.getTime()-Date.now();}
+function scheduleReminders(){
+  remTimers.forEach(t=>{clearTimeout(t);clearInterval(t);});remTimers=[];
+  const r=state.reminders;if(!r)return;
+  if(r.breaks){r.breakTimes.forEach((t,i)=>{const ms=msUntil(t);if(ms>0&&ms<24*3600e3){remTimers.push(setTimeout(()=>notify(['Morning break','Lunch break','Afternoon break'][i]||'Break time','Take your break — rest, stretch and hydrate.'),ms));}});}
+  if(r.hydration){remTimers.push(setInterval(()=>notify('Hydration','Time for a water break 💧'),Math.max(15,r.hydrationMins)*60000));}
+}
+function checkUvReminder(d){
+  if(!state.reminders||!state.reminders.uv)return;
+  const uv=(d.daily&&d.daily.uv_index_max&&d.daily.uv_index_max[0])||0;
+  if(uv>=6)notify('High UV today','UV '+Math.round(uv)+' — sunscreen, hat and shade. Reapply every 2 hours.');
+}
+
+/* ===================== MUSTER POINT ===================== */
+function musterSvg(){return `<svg class="mustermap" viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="210" fill="#eef1f4"/>
+  <rect x="28" y="26" width="150" height="110" fill="#d7dde4" stroke="#b9c2cc"/>
+  <text x="103" y="86" font-size="12" font-family="Arial" fill="#5b6675" text-anchor="middle" font-weight="bold">SITE / BUILDING</text>
+  <rect x="28" y="146" width="264" height="40" fill="#e6e9ee" stroke="#cfd6de"/>
+  <text x="160" y="170" font-size="11" font-family="Arial" fill="#7a8694" text-anchor="middle">CAR PARK / OPEN AREA</text>
+  <line x1="178" y1="80" x2="244" y2="116" stroke="#F58220" stroke-width="3" stroke-dasharray="6 5"/>
+  <polygon points="244,116 234,113 239,123" fill="#F58220"/>
+  <circle cx="262" cy="116" r="20" fill="#2e9e5b"/>
+  <text x="262" y="121" font-size="13" font-family="Arial" fill="#fff" text-anchor="middle" font-weight="bold">MP</text>
+  <text x="262" y="155" font-size="11" font-family="Arial" fill="#1a1a1a" text-anchor="middle" font-weight="bold">MUSTER POINT</text>
+</svg>`;}
+function renderMuster(){
+  const p=activeProj();const m=p.muster||{};
+  const lat=m.lat||p.lat, lng=m.lng||p.lng;
+  const wrap=document.getElementById('musterMapWrap');
+  if(lat&&lng){
+    const dd=0.0016;const bbox=[(lng-dd),(lat-dd),(lng+dd),(lat+dd)].join(',');
+    wrap.innerHTML=`<iframe class="mustermap" style="height:260px" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}"></iframe>
+      <div style="text-align:center;margin-top:8px"><a class="btn btn-ghost sm" style="display:inline-block;width:auto" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=18/${lat}/${lng}" target="_blank" rel="noopener">Open in maps</a></div>`;
+  } else { wrap.innerHTML=musterSvg(); }
+  document.getElementById('musterInfo').innerHTML=esc(m.info||p.details||'Proceed to the designated assembly area shown. Do not re-enter the site until the all-clear is given by your supervisor.').replace(/\n/g,'<br>');
+  document.getElementById('musterSub').textContent='Assembly point for '+shortName(p.name);
+}
+function setMusterHere(){
+  if(!lastPos){toast('Enable location first — open Home and tap the 📍 chip');return;}
+  const ms=document.getElementById('mpSel');let idx=ms?parseInt(ms.value):(state.currentProject||0);
+  const p=state.projects[idx];p.muster=p.muster||{};p.muster.lat=lastPos.lat;p.muster.lng=lastPos.lng;save();
+  const st=document.getElementById('mpMusterStat');if(st)st.textContent='Muster GPS set: '+lastPos.lat.toFixed(5)+', '+lastPos.lng.toFixed(5);
+  toast('Muster point GPS saved 📍');
+}
+
+/* ===================== BROADCAST / ALERTS ===================== */
+function renderBroadcast(){
+  const el=document.getElementById('broadcastBanner');if(!el)return;
+  const b=state.broadcast;
+  if(!b){el.innerHTML='';return;}
+  if(b.type==='emergency'){
+    el.innerHTML=`<div class="banner b-emerg"><span class="bi">🚨</span><div><b>EMERGENCY ALERT</b><br>${esc(b.text)}<div class="btnrow"><button class="btn btn-red sm" onclick="go('muster')">View muster point</button></div><div style="font-size:11px;margin-top:6px;opacity:.85">Issued ${timeAgo(b.time)}</div></div></div>`;
+  } else {
+    el.innerHTML=`<div class="banner b-info"><span class="bi">📢</span><div><b>Site message</b><br>${esc(b.text)}<div style="font-size:11px;margin-top:4px;opacity:.7">${timeAgo(b.time)}</div></div></div>`;
+  }
+}
+function sendBroadcast(type){
+  const t=document.getElementById('bcText').value.trim();
+  if(type==='message'&&!t){toast('Type a message first');return;}
+  if(type==='emergency'&&!confirm('Send an EMERGENCY ALERT to all staff on site?'))return;
+  state.broadcast={type,text:t||'Evacuate now and proceed to the muster point.',time:Date.now()};
+  save();renderBroadcast();renderMgBroadcast();
+  if(type==='emergency')notify('EMERGENCY ALERT',state.broadcast.text);
+  toast(type==='emergency'?'🚨 Emergency alert sent to all staff':'📢 Message sent to all staff');
+}
+function clearBroadcast(){state.broadcast=null;save();renderBroadcast();renderMgBroadcast();toast('Broadcast cleared');}
+function renderMgBroadcast(){
+  const el=document.getElementById('bcCurrent');if(!el)return;
+  const b=state.broadcast;
+  el.innerHTML=b?`<div class="banner ${b.type==='emergency'?'b-alert':'b-info'}"><span class="bi">${b.type==='emergency'?'🚨':'📢'}</span><div><b>${b.type==='emergency'?'Emergency alert active':'Message active'}:</b> ${esc(b.text)}<div class="btnrow"><button class="btn-ghost btn sm" onclick="clearBroadcast()">Clear broadcast</button></div></div></div>`:'<div class="emptymsg">No active broadcast.</div>';
+}
+
+/* ===================== DRAWINGS & SUBMITTALS ===================== */
+function docRow(name,sub,url,icon){
+  const link=url?`<a class="btn btn-ghost sm" style="width:auto" href="${esc(url)}" target="_blank" rel="noopener">Open</a>`:'<span class="chip">On file</span>';
+  return `<div class="doc"><div class="di">${icon}</div><div class="body"><b>${esc(name)}</b><p>${esc(sub)}</p></div>${link}</div>`;
+}
+function renderDrawings(){
+  const el=document.getElementById('drwList');if(!el)return;
+  document.getElementById('drwSub').textContent='Current drawings for '+shortName(activeProj().name);
+  el.innerHTML=state.drawings.map(d=>docRow(d.name,d.rev||'',d.url,'📐')).join('')||'<div class="emptymsg">No drawings uploaded yet.</div>';
+}
+function renderSubmittals(){
+  const el=document.getElementById('subList');if(!el)return;
+  el.innerHTML=state.submittals.map(d=>docRow(d.name,d.type||'',d.url,'📄')).join('')||'<div class="emptymsg">No documents uploaded yet.</div>';
+}
+function renderMgDocs(){
+  const dl=document.getElementById('mgDrwList');
+  if(dl)dl.innerHTML=state.drawings.map((d,i)=>`<div class="doc"><div class="di">📐</div><div class="body"><b>${esc(d.name)}</b><p>${esc(d.rev||'')}</p></div><button style="border:0;background:transparent;color:var(--red);cursor:pointer;font-weight:800" onclick="delDrawing(${i})">✕</button></div>`).join('')||'<div class="emptymsg">None yet.</div>';
+  const sl=document.getElementById('mgSubList');
+  if(sl)sl.innerHTML=state.submittals.map((d,i)=>`<div class="doc"><div class="di">📄</div><div class="body"><b>${esc(d.name)}</b><p>${esc(d.type||'')}</p></div><button style="border:0;background:transparent;color:var(--red);cursor:pointer;font-weight:800" onclick="delSubmittal(${i})">✕</button></div>`).join('')||'<div class="emptymsg">None yet.</div>';
+}
+function addDrawing(){const n=document.getElementById('ndName').value.trim();if(!n){toast('Enter a drawing name');return;}state.drawings.push({name:n,rev:document.getElementById('ndRev').value.trim(),url:document.getElementById('ndUrl').value.trim()});save();renderMgDocs();renderDrawings();['ndName','ndRev','ndUrl'].forEach(id=>document.getElementById(id).value='');toast('Drawing added ✅');}
+function delDrawing(i){state.drawings.splice(i,1);save();renderMgDocs();renderDrawings();}
+function addSubmittal(){const n=document.getElementById('nsName').value.trim();if(!n){toast('Enter a document name');return;}state.submittals.push({name:n,type:document.getElementById('nsType').value.trim(),url:document.getElementById('nsUrl').value.trim()});save();renderMgDocs();renderSubmittals();['nsName','nsType','nsUrl'].forEach(id=>document.getElementById(id).value='');toast('Document added ✅');}
+function delSubmittal(i){state.submittals.splice(i,1);save();renderMgDocs();renderSubmittals();}
+
+/* ===================== FIRST AID ===================== */
+const firstAidGuides=[
+  {t:"🫀 CPR (adult)",b:"1) Check for response & normal breathing. 2) Call 111 (or send someone) and get an AED. 3) Give 30 chest compressions — centre of chest, 5–6cm deep, 100–120/min. 4) Give 2 rescue breaths. 5) Continue 30:2 until help arrives or the person recovers. Use the AED as soon as it arrives and follow its voice prompts."},
+  {t:"🩸 Severe bleeding / cuts",b:"1) Apply firm direct pressure on the wound with a clean dressing. 2) Keep pressure on; add more dressings on top if it soaks through — don’t remove the first. 3) Raise the injured area if possible. 4) Do NOT remove embedded objects — press around them. 5) Call 111 for serious bleeding and treat for shock (lie down, keep warm)."},
+  {t:"🧠 Seizures",b:"1) Stay calm, note the time. 2) Clear the area of hazards and cushion the head. 3) Do NOT restrain the person or put anything in their mouth. 4) After it stops, roll them into the recovery position. 5) Call 111 if the seizure lasts over 5 minutes, repeats, the person is injured, or it’s their first seizure."},
+  {t:"🔥 Burns",b:"1) Cool the burn under cool running water for at least 20 minutes. 2) Remove jewellery/clothing near the burn (unless stuck). 3) Cover loosely with cling film or a clean non-fluffy dressing. 4) Do NOT apply creams, ice or burst blisters. 5) Seek medical help for large, deep, or facial/airway burns."},
+  {t:"😶 Choking",b:"1) Encourage them to cough. 2) If they can’t clear it: give 5 firm back blows between the shoulder blades. 3) Then 5 abdominal thrusts (stand behind, hands above the navel, pull in and up). 4) Alternate 5 back blows / 5 thrusts. 5) Call 111. If they go unconscious, start CPR."},
+  {t:"😵 Unconscious but breathing",b:"1) Check breathing is normal. 2) Roll them onto their side into the recovery position. 3) Tilt the head back to keep the airway open. 4) Keep them warm and monitor breathing. 5) Call 111 and stay with them until help arrives."}
+];
+function renderFirstAid(){
+  const aiders=document.getElementById('faAiders');
+  if(aiders)aiders.innerHTML=(state.firstAiders&&state.firstAiders.length)?state.firstAiders.map(a=>{
+    const ph=(a.phone||'').replace(/[^0-9+]/g,'');
+    return `<div class="li"><div class="av" style="background:var(--green)">✚</div><div class="body"><b>${esc(a.name)}</b><p>${esc(a.role||'First aider')}</p></div>${ph?`<a class="btn btn-green sm" style="width:auto" href="tel:${ph}">📞 Call</a>`:''}</div>`;
+  }).join(''):'<div class="emptymsg">No first aiders listed. Add them in Management → Projects.</div>';
+  const g=document.getElementById('faGuides');
+  if(g)g.innerHTML=firstAidGuides.map((x,i)=>`<div class="card accordion" id="fa${i}"><h3 onclick="document.getElementById('fa${i}').classList.toggle('open')">${x.t} <span>▾</span></h3><div class="ac-body"><p style="font-size:13.5px;line-height:1.5">${esc(x.b)}</p></div></div>`).join('');
+}
+function renderMgFirstAiders(){
+  const el=document.getElementById('mgFaList');if(!el)return;
+  el.innerHTML=(state.firstAiders||[]).map((a,i)=>`<div class="li"><div class="av" style="background:var(--green)">✚</div><div class="body"><b>${esc(a.name)}</b><p>${esc(a.role||'')} · ${esc(a.phone||'')}</p></div><button style="border:0;background:transparent;color:var(--red);cursor:pointer;font-weight:800" onclick="delFirstAider(${i})">✕</button></div>`).join('')||'<div class="emptymsg">None yet.</div>';
+}
+function addFirstAider(){const n=document.getElementById('faName').value.trim();if(!n){toast('Enter a name');return;}state.firstAiders.push({name:n,role:document.getElementById('faRole').value.trim(),phone:document.getElementById('faPhone').value.trim()});save();renderMgFirstAiders();['faName','faRole','faPhone'].forEach(id=>document.getElementById(id).value='');toast('First aider added ✅');}
+function delFirstAider(i){state.firstAiders.splice(i,1);save();renderMgFirstAiders();}
+
+/* ===================== EAP / WELLBEING SUPPORT ===================== */
+function val(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function renderEap(){
+  const e=state.eap||{};
+  const card=document.getElementById('eapCard');if(!card)return;
+  const ph=(e.phone||'').replace(/[^0-9+]/g,'');
+  let h=`<h3>${esc(e.provider||'Employee Assistance Program')}</h3>`;
+  h+=`<p class="meta">${esc(e.hours||'Confidential support')}</p>`;
+  if(ph){h+=`<a class="btn btn-green" style="margin-top:10px" href="tel:${ph}">📞 Call ${esc(e.phone)}</a>`;}
+  else{h+=`<p style="font-size:13px;margin-top:8px">The EAP number hasn’t been set yet — ask your manager, or add it in Management → Projects.</p>`;}
+  if(e.text){h+=`<a class="btn btn-ghost" style="margin-top:8px" href="sms:${e.text.replace(/[^0-9+]/g,'')}">💬 Text ${esc(e.text)}</a>`;}
+  if(e.note){h+=`<p class="meta" style="margin-top:10px">${esc(e.note)}</p>`;}
+  card.innerHTML=h;
+  const cr=document.getElementById('eapCrisis');
+  if(cr)cr.innerHTML=`<div class="li"><div class="av" style="background:var(--red)">!</div><div class="body"><b>Emergency</b><p>If you or someone else is in danger, call emergency services now.</p></div><a class="btn btn-red sm" style="width:auto" href="tel:111">Call 111</a></div>
+    <div class="li"><div class="av" style="background:var(--green)">💬</div><div class="body"><b>Free counselling — NZ</b><p>Call or text 1737 any time to talk with a trained counsellor.</p></div><a class="btn btn-green sm" style="width:auto" href="tel:1737">Call 1737</a></div>`;
+}
+function renderMgEap(){const e=state.eap||{};const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  set('eapProvider',e.provider);set('eapPhone',e.phone);set('eapText',e.text);set('eapHours',e.hours);set('eapNote',e.note);}
+function saveEap(){state.eap={provider:val('eapProvider'),phone:val('eapPhone'),text:val('eapText'),hours:val('eapHours'),note:val('eapNote')};save();renderEap();toast('EAP details saved ✅');}
+
+/* ===================== SITE CONTACTS ===================== */
+function nameOnsite(name){const a=(state.onsite||[]);const n=(name||'').toLowerCase().split('—')[0].trim();return a.some(o=>{const on=(o.name||'').toLowerCase();return on===n||n.startsWith(on)||on.startsWith(n);});}
+function personRow(name,sub,phone,onsite,email){
+  const ph=(phone||'').replace(/[^0-9+]/g,'');
+  const act=ph?`<a class="btn btn-green sm" style="width:auto" href="tel:${ph}">📞 Call</a>`:(email?`<a class="btn btn-ghost sm" style="width:auto" href="mailto:${esc(email)}">✉️</a>`:'');
+  const badge=onsite?'<span class="chip" style="background:var(--green);color:#fff">● On site</span>':'<span class="chip">Off site</span>';
+  const init=(name||'?').trim()[0]||'?';
+  return `<div class="li"><div class="av" style="background:${onsite?'var(--green)':'#9aa3ad'}">${esc(init)}</div><div class="body"><b>${esc(name)}</b><p>${esc(sub)}</p>${badge}</div>${act}</div>`;
+}
+function renderMgContacts(){
+  const onEl=document.getElementById('ctOnsite');
+  if(onEl)onEl.innerHTML=(state.onsite&&state.onsite.length)?state.onsite.map(o=>`<div class="li"><div class="av" style="background:var(--green)">${esc((o.name||'?').trim()[0])}</div><div class="body"><b>${esc(o.name)}</b><p>${esc(o.company||'')}${o.visitor?' · Visitor':''} · signed on ${timeAgo(o.t)}</p></div><span class="dot on"></span></div>`).join(''):'<div class="emptymsg">No one is signed on right now.</div>';
+  const dir=document.getElementById('ctDir');
+  if(dir){
+    let rows='';const p=activeProj();const d=p.director||{};
+    if(d.name)rows+=personRow(d.name,'Project Director · '+shortName(p.name),d.phone,nameOnsite(d.name),d.email);
+    (state.firstAiders||[]).forEach(a=>rows+=personRow(a.name,'First aider · '+(a.role||''),a.phone,nameOnsite(a.name)));
+    (state.hosts||[]).forEach(h=>rows+=personRow(h.name,'Host / site contact',null,nameOnsite(h.name),h.email));
+    dir.innerHTML=rows||'<div class="emptymsg">No directory contacts.</div>';
+  }
+}
+
+/* ===================== VISITORS / HOSTS ===================== */
+let soType='worker';
+function pickType(b){document.querySelectorAll('#soType button').forEach(x=>x.classList.remove('active'));b.classList.add('active');soType=b.dataset.v;document.getElementById('soHostWrap').classList.toggle('hide',soType!=='visitor');}
+function renderHosts(){const s=document.getElementById('soHost');if(s)s.innerHTML=state.hosts.map((h,i)=>`<option value="${i}">${esc(h.name)}</option>`).join('');}
+function notifyHost(host,name,comp,job){
+  const body=`Hi ${shortName(host.name)},\n\nYou have a visitor signed in on site via the Victaulic Pre-Start Safety app.\n\nVisitor: ${name}\nCompany: ${comp}\nSite: ${job}\nTime: ${new Date().toLocaleString()}\n\nPlease come to the site office / reception to meet them.\n\n-- Sent from the Victaulic Pre-Start Safety app`;
+  const subj=encodeURIComponent(`Visitor sign-in: ${name} (${comp})`);
+  window.location.href=`mailto:${host.email}?subject=${subj}&body=${encodeURIComponent(body)}`;
+}
+function renderHostsMg(){const el=document.getElementById('mgHostList');if(!el)return;
+  el.innerHTML=state.hosts.map((h,i)=>`<div class="li"><div class="av" style="background:${avatarColor(h.name)}">${esc((h.name||'?').trim()[0])}</div><div class="body"><b>${esc(h.name)}</b><p>${esc(h.email)}</p></div><button style="border:0;background:transparent;color:var(--red);cursor:pointer;font-weight:800" onclick="delHost(${i})">✕</button></div>`).join('')||'<div class="emptymsg">No hosts yet.</div>';}
+function addHost(){const n=document.getElementById('nhName').value.trim(),e=document.getElementById('nhEmail').value.trim();if(!n||!e){toast('Add a name and email');return;}state.hosts.push({name:n,email:e});save();renderHostsMg();renderHosts();document.getElementById('nhName').value='';document.getElementById('nhEmail').value='';toast('Host added ✅');}
+function delHost(i){state.hosts.splice(i,1);save();renderHostsMg();renderHosts();toast('Host removed');}
 
 /* ===================== PPE ===================== */
 function renderPPE(){
@@ -1148,7 +1749,7 @@ function renderIndRoster(){
 
 /* ===================== HELPERS ===================== */
 function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function avatarColor(s){const c=['#1f3f63','#ff7a18','#19b562','#7c4dff','#e23b3b','#0aa1b8'];let h=0;for(const ch of(s||'x'))h+=ch.charCodeAt(0);return c[h%c.length];}
+function avatarColor(s){const c=['#000000','#F58220','#787878','#2e9e5b','#cc2f2f','#555555'];let h=0;for(const ch of(s||'x'))h+=ch.charCodeAt(0);return c[h%c.length];}
 function liItem(title,sub,tag,t,ic,col){
   const init=(title||'?').trim()[0]||'?';
   return `<div class="li"><div class="av" style="background:${col}">${init}</div><div class="body">
@@ -1158,7 +1759,8 @@ function liItem(title,sub,tag,t,ic,col){
 function timeAgo(t){const s=(Date.now()-t)/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 
 /* ===================== INIT ===================== */
-renderHome();renderChecklist();renderWellQs();renderNomFeed();renderPPE();
+renderHome();renderChecklist();renderWellQs();renderNomFeed();renderPPE();renderHosts();
+if('Notification' in window && Notification.permission==='granted')scheduleReminders();
 window.addEventListener('load',initSig);
 window.addEventListener('resize',()=>{/* keep sig sized */});
 </script>
