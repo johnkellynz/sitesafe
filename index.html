@@ -294,7 +294,8 @@
     <div class="tile sm3" onclick="go('equipment')"><div class="ic i-amber">🔌</div><b>Equipment</b><span></span></div>
     <div class="tile sm3" onclick="go('drawings')"><div class="ic i-blue">📐</div><b>Drawings</b><span></span></div>
     <div class="tile sm3" onclick="go('submittals')"><div class="ic i-amber">📚</div><b>Submittals</b><span></span></div>
-    <div class="tile sm3" onclick="go('muster')"><div class="ic i-red">🚨</div><b>Muster</b><span></span></div>
+    <div class="tile sm3" onclick="go('muster')"><div class="ic i-red">🚨</div><b>Assembly Point</b><span></span></div>
+    <div class="tile sm3" onclick="go('weather')"><div class="ic i-blue">🌤️</div><b>Weather</b><span></span></div>
   </div>
 
   <div class="sec-h">SAFETY &amp; WELLBEING</div>
@@ -615,7 +616,7 @@
 
 <!-- ============== WORKER: MUSTER POINT ============== -->
 <section class="view" id="v-muster">
-  <h1>Emergency Muster Point</h1>
+  <h1>Emergency Assembly Point</h1>
   <p class="sub" id="musterSub">On the alarm, stop work, make safe and proceed to the assembly area.</p>
   <div class="banner b-alert"><span class="bi">🚨</span><div>In an emergency call <b>emergency services / your site emergency line</b>, then proceed to the muster point and await the roll call.</div></div>
   <div class="card"><div id="musterMapWrap"></div></div>
@@ -845,7 +846,7 @@
   <a onclick="navTo('submittals')">📚 Submittals &amp; Manuals</a>
   <a onclick="navTo('weather')">🌤️ Weather</a>
   <a onclick="navTo('reminders')">⏰ Reminders</a>
-  <a onclick="navTo('muster')">🚨 Muster Point</a>
+  <a onclick="navTo('muster')">🚨 Assembly Point</a>
   <a onclick="navTo('firstaid')">🩹 First Aid</a>
   <a onclick="navTo('eap')">🤝 Mates’ Support (EAP)</a>
   <a onclick="navTo('report')">📣 Report a Hazard</a>
@@ -1531,7 +1532,7 @@ function renderBroadcast(){
   const b=state.broadcast;
   if(!b){el.innerHTML='';return;}
   if(b.type==='emergency'){
-    el.innerHTML=`<div class="banner b-emerg"><span class="bi">🚨</span><div><b>EMERGENCY ALERT</b><br>${esc(b.text)}<div class="btnrow"><button class="btn btn-red sm" onclick="go('muster')">View muster point</button></div><div style="font-size:11px;margin-top:6px;opacity:.85">Issued ${timeAgo(b.time)}</div></div></div>`;
+    el.innerHTML=`<div class="banner b-emerg"><span class="bi">🚨</span><div><b>EMERGENCY ALERT</b><br>${esc(b.text)}<div class="btnrow"><button class="btn btn-red sm" onclick="go('muster')">View assembly point</button></div><div style="font-size:11px;margin-top:6px;opacity:.85">Issued ${timeAgo(b.time)}</div></div></div>`;
   } else {
     el.innerHTML=`<div class="banner b-info"><span class="bi">📢</span><div><b>Site message</b><br>${esc(b.text)}<div style="font-size:11px;margin-top:4px;opacity:.7">${timeAgo(b.time)}</div></div></div>`;
   }
